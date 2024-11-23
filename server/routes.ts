@@ -101,10 +101,16 @@ class Routes {
     return Responses.posts(posts);
   }
 
+  @Router.get("/posts")
+  async getPost(_id: ObjectId) {
+    const post = await Posting.getPost(_id);
+    return Responses.posts([post]);
+  }
+
   @Router.post("/posts")
-  async createPost(session: SessionDoc, translation: string, imageUrl?: string, audioUrl?: string) {
+  async createPost(session: SessionDoc, word: string, translation: string, imageUrl?: string, audioUrl?: string) {
     const user = Sessioning.getUser(session);
-    const created = await Posting.create(user, translation, imageUrl, audioUrl);
+    const created = await Posting.create(user, word, translation, imageUrl, audioUrl);
     return { msg: created.msg, post: await Responses.post(created.post) };
   }
 
