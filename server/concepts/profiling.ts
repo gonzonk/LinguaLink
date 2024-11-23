@@ -2,12 +2,12 @@ import { ObjectId } from "mongodb";
 import DocCollection, { BaseDoc } from "../framework/doc";
 import { BadValuesError, NotAllowedError, NotFoundError } from "./errors";
 
-enum UserRole {
+export enum UserRole {
   TEACHER = "teacher",
   LEARNER = "learner",
 }
 
-enum Dialects {
+export enum Dialects {
   WEST = "North Island western",
   EAST = "North Island eastern",
   SOUTH = "South Island",

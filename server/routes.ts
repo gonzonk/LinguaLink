@@ -2,7 +2,8 @@ import { ObjectId } from "mongodb";
 
 import { Router, getExpressRouter } from "./framework/router";
 
-import { Authing, Friending, Posting, Sessioning } from "./app";
+import { Friending, Posting, Profiling, Sessioning } from "./app";
+import { Dialects, UserRole } from "./concepts/profiling";
 import { SessionDoc } from "./concepts/sessioning";
 import Responses from "./responses";
 
@@ -17,48 +18,66 @@ class Routes {
   @Router.get("/session")
   async getSessionUser(session: SessionDoc) {
     const user = Sessioning.getUser(session);
-    return await Authing.getUserById(user);
+    return await Profiling.getUserById(user);
   }
 
   @Router.get("/users")
-  async getUsers() {
-    return await Authing.getUsers();
+  async getProfiles() {
+    return await Profiling.getProfiles();
   }
 
   @Router.get("/users/:username")
   @Router.validate(z.object({ username: z.string().min(1) }))
   async getUser(username: string) {
-    return await Authing.getUserByUsername(username);
+    return await Profiling.getUserByUsername(username);
   }
 
   @Router.post("/users")
-  async createUser(session: SessionDoc, username: string, password: string) {
+  async createUser(session: SessionDoc, username: string, password: string, description: string, role: UserRole, dialect: Dialects) {
     Sessioning.isLoggedOut(session);
-    return await Authing.create(username, password);
+    return await Profiling.create(username, password, description, role, dialect);
   }
 
   @Router.patch("/users/username")
   async updateUsername(session: SessionDoc, username: string) {
     const user = Sessioning.getUser(session);
-    return await Authing.updateUsername(user, username);
+    return await Profiling.updateUsername(user, username);
   }
 
   @Router.patch("/users/password")
   async updatePassword(session: SessionDoc, currentPassword: string, newPassword: string) {
     const user = Sessioning.getUser(session);
-    return Authing.updatePassword(user, currentPassword, newPassword);
+    return Profiling.updatePassword(user, currentPassword, newPassword);
+  }
+
+  @Router.patch("/users/description")
+  async updateDescription(session: SessionDoc, description: string) {
+    const user = Sessioning.getUser(session);
+    return await Profiling.updateDescription(user, description);
+  }
+
+  @Router.patch("/users/role")
+  async updateRole(session: SessionDoc, role: UserRole) {
+    const user = Sessioning.getUser(session);
+    return await Profiling.updateRole(user, role);
+  }
+
+  @Router.patch("/users/dialect")
+  async updateDialect(session: SessionDoc, dialect: Dialects) {
+    const user = Sessioning.getUser(session);
+    return await Profiling.updateDialect(user, dialect);
   }
 
   @Router.delete("/users")
   async deleteUser(session: SessionDoc) {
     const user = Sessioning.getUser(session);
     Sessioning.end(session);
-    return await Authing.delete(user);
+    return await Profiling.delete(user);
   }
 
   @Router.post("/login")
   async logIn(session: SessionDoc, username: string, password: string) {
-    const u = await Authing.authenticate(username, password);
+    const u = await Profiling.authenticate(username, password);
     Sessioning.start(session, u._id);
     return { msg: "Logged in!" };
   }
@@ -74,7 +93,7 @@ class Routes {
   async getPosts(author?: string) {
     let posts;
     if (author) {
-      const id = (await Authing.getUserByUsername(author))._id;
+      const id = (await Profiling.getUserByUsername(author))._id;
       posts = await Posting.getByAuthor(id);
     } else {
       posts = await Posting.getPosts();
@@ -108,13 +127,13 @@ class Routes {
   @Router.get("/friends")
   async getFriends(session: SessionDoc) {
     const user = Sessioning.getUser(session);
-    return await Authing.idsToUsernames(await Friending.getFriends(user));
+    return await Profiling.idsToUsernames(await Friending.getFriends(user));
   }
 
   @Router.delete("/friends/:friend")
   async removeFriend(session: SessionDoc, friend: string) {
     const user = Sessioning.getUser(session);
-    const friendOid = (await Authing.getUserByUsername(friend))._id;
+    const friendOid = (await Profiling.getUserByUsername(friend))._id;
     return await Friending.removeFriend(user, friendOid);
   }
 
@@ -127,28 +146,28 @@ class Routes {
   @Router.post("/friend/requests/:to")
   async sendFriendRequest(session: SessionDoc, to: string) {
     const user = Sessioning.getUser(session);
-    const toOid = (await Authing.getUserByUsername(to))._id;
+    const toOid = (await Profiling.getUserByUsername(to))._id;
     return await Friending.sendRequest(user, toOid);
   }
 
   @Router.delete("/friend/requests/:to")
   async removeFriendRequest(session: SessionDoc, to: string) {
     const user = Sessioning.getUser(session);
-    const toOid = (await Authing.getUserByUsername(to))._id;
+    const toOid = (await Profiling.getUserByUsername(to))._id;
     return await Friending.removeRequest(user, toOid);
   }
 
   @Router.put("/friend/accept/:from")
   async acceptFriendRequest(session: SessionDoc, from: string) {
     const user = Sessioning.getUser(session);
-    const fromOid = (await Authing.getUserByUsername(from))._id;
+    const fromOid = (await Profiling.getUserByUsername(from))._id;
     return await Friending.acceptRequest(fromOid, user);
   }
 
   @Router.put("/friend/reject/:from")
   async rejectFriendRequest(session: SessionDoc, from: string) {
     const user = Sessioning.getUser(session);
-    const fromOid = (await Authing.getUserByUsername(from))._id;
+    const fromOid = (await Profiling.getUserByUsername(from))._id;
     return await Friending.rejectRequest(fromOid, user);
   }
 }
