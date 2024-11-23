@@ -104,7 +104,7 @@ class Routes {
   @Router.get("/posts")
   async getPost(_id: ObjectId) {
     const post = await Posting.getPost(_id);
-    return Responses.posts([post]);
+    return Responses.post(post);
   }
 
   @Router.post("/posts")
