@@ -23,6 +23,14 @@ export default class UpvoteConcept {
     this.upvotes = new DocCollection<UpvoteDoc>(name);
   }
 
+  async getVotes(item: ObjectId) {
+    const upvotes = await this.upvotes.readOne({ item: item });
+    if (!upvotes) {
+      throw new NotFoundError(`Item ${item} does not exist!`);
+    }
+    return { msg: "votes found", votes: upvotes };
+  }
+
   async upvoteItem(item: ObjectId, user: ObjectId) {
     await this.assertUserIsReviewer(item, user);
     await this.assertUserNotInDownvotes(item, user);
