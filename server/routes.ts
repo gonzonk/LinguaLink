@@ -211,7 +211,7 @@ class Routes {
     return await Upvoting.getUpvoteCount(ItemOid);
   }
 
-  @Router.get("/upvotes/:id")
+  @Router.get("/downvotes/:id")
   async countDownvotes(id: string) {
     const ItemOid = new ObjectId(id);
     return await Upvoting.getDownvoteCount(ItemOid);
