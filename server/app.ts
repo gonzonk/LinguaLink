@@ -1,3 +1,4 @@
+import DictionaryingConcept from "./concepts/dictionarying";
 import FriendingConcept from "./concepts/friending";
 import PostingConcept from "./concepts/posting";
 import ProfilingConcept from "./concepts/profiling";
@@ -11,3 +12,4 @@ export const Profiling = new ProfilingConcept("profiles");
 export const Posting = new PostingConcept("posts");
 export const Friending = new FriendingConcept("friends");
 export const Upvoting = new UpvotingConcept("votes");
+export const Dictionarying = new DictionaryingConcept("dictionary")

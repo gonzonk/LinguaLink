@@ -47,7 +47,6 @@ export default class DictionaryingConcept {
   }
 
   async deleteItem(word: string, item: ObjectId) {
-    await this.assertEntryExists(word);
     const entry = await this.dictionary.readOne({ word });
     const updatedPosts = entry?.posts.filter((p) => !p.equals(item));
     await this.dictionary.partialUpdateOne({ word }, { posts: updatedPosts });
@@ -65,6 +64,11 @@ export default class DictionaryingConcept {
     if (!entry) {
       throw new EntryAlreadyExistsError(word);
     }
+  }
+
+  public async entryExists(word: string) {
+    const entry = await this.dictionary.readOne({ word });
+    return entry !== null
   }
 
   private async assertEntryExists(word: string) {
