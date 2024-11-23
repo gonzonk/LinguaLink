@@ -24,9 +24,9 @@ export default class UpvoteConcept {
   }
 
   async upvoteItem(item: ObjectId, user: ObjectId) {
-    this.assertUserIsReviewer(item, user);
-    this.assertUserNotInDownvotes(item, user);
-    this.assertUserNotInUpvotes(item, user);
+    await this.assertUserIsReviewer(item, user);
+    await this.assertUserNotInDownvotes(item, user);
+    await this.assertUserNotInUpvotes(item, user);
     const upvotes = await this.upvotes.readOne({ item: item });
     if (!upvotes) {
       throw new NotFoundError(`Item ${item} does not exist!`);
@@ -38,9 +38,9 @@ export default class UpvoteConcept {
   }
 
   async downvoteItem(item: ObjectId, user: ObjectId) {
-    this.assertUserIsReviewer(item, user);
-    this.assertUserNotInDownvotes(item, user);
-    this.assertUserNotInUpvotes(item, user);
+    await this.assertUserIsReviewer(item, user);
+    await this.assertUserNotInDownvotes(item, user);
+    await this.assertUserNotInUpvotes(item, user);
     const upvotes = await this.upvotes.readOne({ item: item });
     if (!upvotes) {
       throw new NotFoundError(`Item ${item} does not exist!`);
@@ -52,7 +52,7 @@ export default class UpvoteConcept {
   }
 
   async removeUpvote(item: ObjectId, user: ObjectId) {
-    this.assertUserInUpvotes(item, user);
+    await this.assertUserInUpvotes(item, user);
     const upvotes = await this.upvotes.readOne({ item: item });
     if (!upvotes) {
       throw new NotFoundError(`Item ${item} does not exist!`);
@@ -64,7 +64,7 @@ export default class UpvoteConcept {
   }
 
   async removeDownvote(item: ObjectId, user: ObjectId) {
-    this.assertUserInDownvotes(item, user);
+    await this.assertUserInDownvotes(item, user);
     const upvotes = await this.upvotes.readOne({ item: item });
     if (!upvotes) {
       throw new NotFoundError(`Item ${item} does not exist!`);
