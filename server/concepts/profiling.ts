@@ -10,7 +10,7 @@ enum UserRole {
 enum Dialects {
   WEST = "North Island western",
   EAST = "North Island eastern",
-  SOUTH = "South Island"
+  SOUTH = "South Island",
 }
 
 export interface UserDoc extends BaseDoc {
