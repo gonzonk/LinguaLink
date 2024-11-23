@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb";
 
 import { Router, getExpressRouter } from "./framework/router";
 
-import { Friending, Posting, Profiling, Sessioning, Upvoting } from "./app";
+import { Dictionarying, Friending, Posting, Profiling, Sessioning, Upvoting } from "./app";
 import { Dialects, UserRole } from "./concepts/profiling";
 import { SessionDoc } from "./concepts/sessioning";
 import Responses from "./responses";
@@ -111,6 +111,15 @@ class Routes {
   async createPost(session: SessionDoc, word: string, translation: string, imageUrl?: string, audioUrl?: string) {
     const user = Sessioning.getUser(session);
     const created = await Posting.create(user, word, translation, imageUrl, audioUrl);
+
+    if(created.post !== null) {
+      const entryExists = await Dictionarying.entryExists(word)
+      if(entryExists) {
+        Dictionarying.addItem(word, created.post._id)
+      } else {
+        Dictionarying.createEntry(word, created.post._id)
+      }
+    } 
     return { msg: created.msg, post: await Responses.post(created.post) };
   }
 
@@ -127,7 +136,10 @@ class Routes {
     const user = Sessioning.getUser(session);
     const oid = new ObjectId(id);
     await Posting.assertAuthorIsUser(oid, user);
-    return Posting.delete(oid);
+    const post = await Posting.getPost(oid);
+    await Posting.delete(oid);
+    await Dictionarying.deleteItem(post.word, oid)
+    return { msg: "Post deleted successfully!" };
   }
 
   @Router.get("/friends")
