@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb";
 
 import { Router, getExpressRouter } from "./framework/router";
 
-import { Friending, Posting, Profiling, Sessioning } from "./app";
+import { Friending, Posting, Profiling, Sessioning, Upvoting } from "./app";
 import { Dialects, UserRole } from "./concepts/profiling";
 import { SessionDoc } from "./concepts/sessioning";
 import Responses from "./responses";
@@ -175,6 +175,46 @@ class Routes {
     const user = Sessioning.getUser(session);
     const fromOid = (await Profiling.getUserByUsername(from))._id;
     return await Friending.rejectRequest(fromOid, user);
+  }
+
+  @Router.put("/upvotes/upvote/:id")
+  async upvote(session: SessionDoc, id: string) {
+    const user = Sessioning.getUser(session);
+    const ItemOid = new ObjectId(id);
+    const votes = await Upvoting.getVotes(ItemOid);
+    let response;
+    if (votes.votes.upvotes.has(user)) {
+      response = await Upvoting.removeUpvote(ItemOid, user);
+    } else {
+      response = await Upvoting.upvoteItem(ItemOid, user);
+    }
+    return response;
+  }
+
+  @Router.put("/upvotes/downvote/:id")
+  async downvote(session: SessionDoc, id: string) {
+    const user = Sessioning.getUser(session);
+    const ItemOid = new ObjectId(id);
+    const votes = await Upvoting.getVotes(ItemOid);
+    let response;
+    if (votes.votes.downvotes.has(user)) {
+      response = await Upvoting.removeDownvote(ItemOid, user);
+    } else {
+      response = await Upvoting.downvoteItem(ItemOid, user);
+    }
+    return response;
+  }
+
+  @Router.get("/upvotes/:id")
+  async countUpvotes(id: string) {
+    const ItemOid = new ObjectId(id);
+    return await Upvoting.getUpvoteCount(ItemOid);
+  }
+
+  @Router.get("/upvotes/:id")
+  async countDownvotes(id: string) {
+    const ItemOid = new ObjectId(id);
+    return await Upvoting.getDownvoteCount(ItemOid);
   }
 }
 

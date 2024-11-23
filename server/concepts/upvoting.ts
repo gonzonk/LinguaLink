@@ -13,7 +13,7 @@ export interface UpvoteDoc extends BaseDoc {
 /**
  * concept: Rating[Content]
  */
-export default class UpvoteConcept {
+export default class UpvotingConcept {
   public readonly upvotes: DocCollection<UpvoteDoc>;
 
   /**
