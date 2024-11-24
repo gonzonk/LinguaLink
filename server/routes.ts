@@ -112,14 +112,14 @@ class Routes {
     const user = Sessioning.getUser(session);
     const created = await Posting.create(user, word, translation, imageUrl, audioUrl);
 
-    if(created.post !== null) {
-      const entryExists = await Dictionarying.entryExists(word)
-      if(entryExists) {
-        Dictionarying.addItem(word, created.post._id)
+    if (created.post !== null) {
+      const entryExists = await Dictionarying.entryExists(word);
+      if (entryExists) {
+        await Dictionarying.addItem(word, created.post._id);
       } else {
-        Dictionarying.createEntry(word, created.post._id)
+        await Dictionarying.createEntry(word, created.post._id);
       }
-    } 
+    }
     return { msg: created.msg, post: await Responses.post(created.post) };
   }
 
@@ -138,7 +138,7 @@ class Routes {
     await Posting.assertAuthorIsUser(oid, user);
     const post = await Posting.getPost(oid);
     await Posting.delete(oid);
-    await Dictionarying.deleteItem(post.word, oid)
+    await Dictionarying.deleteItem(post.word, oid);
     return { msg: "Post deleted successfully!" };
   }
 

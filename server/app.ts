@@ -12,4 +12,4 @@ export const Profiling = new ProfilingConcept("profiles");
 export const Posting = new PostingConcept("posts");
 export const Friending = new FriendingConcept("friends");
 export const Upvoting = new UpvotingConcept("votes");
-export const Dictionarying = new DictionaryingConcept("dictionary")
+export const Dictionarying = new DictionaryingConcept("dictionary");

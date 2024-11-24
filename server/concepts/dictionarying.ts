@@ -68,7 +68,7 @@ export default class DictionaryingConcept {
 
   public async entryExists(word: string) {
     const entry = await this.dictionary.readOne({ word });
-    return entry !== null
+    return entry !== null;
   }
 
   private async assertEntryExists(word: string) {
