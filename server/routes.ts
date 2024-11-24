@@ -111,15 +111,7 @@ class Routes {
   async createPost(session: SessionDoc, word: string, translation: string, imageUrl?: string, audioUrl?: string) {
     const user = Sessioning.getUser(session);
     const created = await Posting.create(user, word, translation, imageUrl, audioUrl);
-
-    if (created.post !== null) {
-      const entryExists = await Dictionarying.entryExists(word);
-      if (entryExists) {
-        await Dictionarying.addItem(word, created.post._id);
-      } else {
-        await Dictionarying.createEntry(word, created.post._id);
-      }
-    }
+    await Dictionarying.addItem(word, created.post!._id)
     return { msg: created.msg, post: await Responses.post(created.post) };
   }
 
