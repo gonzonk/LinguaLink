@@ -77,10 +77,6 @@ export default class DictionaryingConcept {
       throw new EntryNotFoundError(word);
     }
   }
-
-  async deletePostEntrys(postId: ObjectId) {
-    return await this.dictionary.deleteMany({ postId });
-  }
 }
 
 export class EntryAlreadyExistsError extends NotAllowedError {
