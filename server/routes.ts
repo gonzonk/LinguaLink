@@ -194,6 +194,9 @@ class Routes {
     let response;
     if (votes.votes.upvotes.includes(user)) {
       response = await Upvoting.removeUpvote(ItemOid, user);
+    } else if (votes.votes.downvotes.includes(user)) {
+      await Upvoting.removeDownvote(ItemOid, user);
+      response = await Upvoting.upvoteItem(ItemOid, user);
     } else {
       response = await Upvoting.upvoteItem(ItemOid, user);
     }
@@ -208,6 +211,9 @@ class Routes {
     let response;
     if (votes.votes.downvotes.includes(user)) {
       response = await Upvoting.removeDownvote(ItemOid, user);
+    } else if (votes.votes.upvotes.includes(user)) {
+      await Upvoting.removeUpvote(ItemOid, user);
+      response = await Upvoting.downvoteItem(ItemOid, user);
     } else {
       response = await Upvoting.downvoteItem(ItemOid, user);
     }

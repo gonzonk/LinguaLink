@@ -1,55 +1,50 @@
 <script setup lang="ts">
-import { ref } from "vue";
 import { fetchy } from "../../utils/fetchy";
 
-const content = ref("");
-const word = ref("");
-const translation = ref("");
-const imageUrl = ref("");
-const audioUrl = ref("");
-
-const emit = defineEmits(["refreshPosts"]);
+const props = defineProps(["parent"]);
+const emit = defineEmits(["refreshVotes"]);
 
 const placeUpvote = async () => {
   try {
-    await fetchy("/api/votes", "POST");
+    await fetchy("/upvotes/upvote", "PUT", {
+      body: {
+        id: props.parent.value,
+      },
+    });
   } catch (_) {
     return;
   }
+  emit("refreshVotes");
 };
 
-const emptyForm = () => {
-  word.value = "";
-  translation.value = "";
-  imageUrl.value = "";
-  audioUrl.value = "";
+const placeDownvote = async () => {
+  try {
+    await fetchy("/upvotes/downvote", "PUT", {
+      body: {
+        id: props.parent.value,
+      },
+    });
+  } catch (_) {
+    return;
+  }
+  emit("refreshVotes");
 };
 </script>
 
 <template>
-  <form @submit.prevent="createPost">
-    <button @click="">Upvote</button>
-    <button>Downvote</button>
-    <button type="submit" class="pure-button-primary pure-button">Add Word</button>
-  </form>
+  <div>
+    <button @click="placeUpvote">Upvote</button>
+    <button @click="placeDownvote">Downvote</button>
+  </div>
 </template>
 
 <style scoped>
-form {
+div {
   background-color: var(--base-bg);
   border-radius: 1em;
   display: flex;
   flex-direction: column;
   gap: 0.5em;
   padding: 1em;
-}
-
-textarea {
-  font-family: inherit;
-  font-size: inherit;
-  height: 6em;
-  padding: 0.5em;
-  border-radius: 4px;
-  resize: none;
 }
 </style>
