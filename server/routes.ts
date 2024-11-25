@@ -102,14 +102,14 @@ class Routes {
 
   @Router.get("/entries")
   async getEntries() {
-    const entries = await Dictionarying.getAllEntries()
-    let result = []
-    for(const e of entries) {
-      const postId = e.posts.at(0)
-      const post = await Posting.getPost(postId as ObjectId)
-      result.push({ word: post.word, translation: post.translation })
+    const entries = await Dictionarying.getAllEntries();
+    const result = [];
+    for (const e of entries) {
+      const postId = e.posts.at(0);
+      const post = await Posting.getPost(postId as ObjectId);
+      result.push({ word: post.word, translation: post.translation });
     }
-    return result
+    return result;
   }
 
   @Router.post("/posts")

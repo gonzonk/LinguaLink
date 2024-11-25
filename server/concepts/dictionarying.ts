@@ -45,7 +45,7 @@ export default class DictionaryingConcept {
     const entry = await this.dictionary.readOne({ word });
     if (entry) {
       let updatedPosts = entry.posts;
-      updatedPosts = updatedPosts.filter(p => !p.equals(item));
+      updatedPosts = updatedPosts.filter((p) => !p.equals(item));
       if (updatedPosts.length > 0) {
         // Entry still has posts remaining
         await this.dictionary.partialUpdateOne({ word }, { posts: updatedPosts });
