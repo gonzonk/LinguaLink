@@ -23,7 +23,10 @@ const deletePost = async () => {
   <p class="word">{{ props.post.word }}</p>
   <p class="translation">{{ props.post.translation }}</p>
 
-  <p>{{ props.post.imageUrl }}</p>
+  <div v-if="props.post.imageUrl" class="image-container">
+    <img :src="props.post.imageUrl" alt="Post image" class="post-image" />
+  </div>
+  <!-- <p>{{ props.post.imageUrl }}</p> -->
   <p>{{ props.post.audioUrl }}</p>
 
   <div class="base">
@@ -54,6 +57,26 @@ p {
   font-size: 1em; /* Slightly larger font size for titles */
   text-align: center;
   color: #333; /* Dark text for contrast */
+}
+
+.post-images {
+  display: flex;
+  align-items: center; /* Center images vertically */
+  justify-content: center; /* Center images horizontally */
+  position: relative; /* Position for arrow buttons */
+}
+
+.image-container {
+  width: 500px; /* Fixed width for the image container */
+  height: 500px; /* Fixed height for the image container */
+}
+
+.post-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px solid #6fc5d6; /* Border to match the theme */
 }
 
 .author {
