@@ -24,9 +24,10 @@ export default class UpvotingConcept {
   }
 
   async getVotes(item: ObjectId) {
-    const votes = await this.upvotes.readOne({ item: item });
+    let votes = await this.upvotes.readOne({ item: item });
     if (!votes) {
-      throw new NotFoundError(`Item ${item} does not exist!`);
+      await this.upvotes.createOne({ item: item, upvotes: [], downvotes: [], reviewers: [] });
+      votes = await this.upvotes.readOne({ item: item });
     }
     return { msg: "votes found", votes: votes };
   }
