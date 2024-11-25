@@ -186,7 +186,7 @@ class Routes {
     return await Friending.rejectRequest(fromOid, user);
   }
 
-  @Router.put("/upvotes/upvote/:id")
+  @Router.put("/upvotes/upvote")
   async upvote(session: SessionDoc, id: string) {
     const user = Sessioning.getUser(session);
     const ItemOid = new ObjectId(id);
@@ -203,7 +203,7 @@ class Routes {
     return response;
   }
 
-  @Router.put("/upvotes/downvote/:id")
+  @Router.put("/upvotes/downvote")
   async downvote(session: SessionDoc, id: string) {
     const user = Sessioning.getUser(session);
     const ItemOid = new ObjectId(id);
@@ -220,13 +220,13 @@ class Routes {
     return response;
   }
 
-  @Router.get("/upvotes/:id")
+  @Router.get("/upvotes")
   async countUpvotes(id: string) {
     const ItemOid = new ObjectId(id);
     return await Upvoting.getUpvoteCount(ItemOid);
   }
 
-  @Router.get("/downvotes/:id")
+  @Router.get("/downvotes")
   async countDownvotes(id: string) {
     const ItemOid = new ObjectId(id);
     return await Upvoting.getDownvoteCount(ItemOid);

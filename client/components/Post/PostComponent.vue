@@ -3,6 +3,7 @@ import { useUserStore } from "@/stores/user";
 import { formatDate } from "@/utils/formatDate";
 import { storeToRefs } from "pinia";
 import { fetchy } from "../../utils/fetchy";
+import VotesBlock from "../Votes/VotesBlock.vue";
 
 const props = defineProps(["post"]);
 const emit = defineEmits(["editPost", "refreshPosts"]);
@@ -52,6 +53,9 @@ const deletePost = async () => {
         </button>
       </li>
     </menu>
+    <article class="votes">
+      <VotesBlock v-bind:parent="props.post.id" />
+    </article>
     <article class="timestamp">
       <p v-if="props.post.dateCreated !== props.post.dateUpdated">Edited on: {{ formatDate(props.post.dateUpdated) }}</p>
       <p v-else>Created on: {{ formatDate(props.post.dateCreated) }}</p>

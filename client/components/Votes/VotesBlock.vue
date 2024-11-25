@@ -9,17 +9,17 @@ const loaded = ref(false);
 
 const getVotes = async () => {
   try {
-    const upvotes = await fetchy("/upvotes", "GET", {
+    const upvotes = await fetchy("/api/upvotes", "GET", {
       body: {
         id: props.parent.value,
       },
     });
-    const downvotes = await fetchy("/downvotes", "GET", {
+    const downvotes = await fetchy("/api/downvotes", "GET", {
       body: {
         id: props.parent.value,
       },
     });
-    votes.value = upvotes - downvotes;
+    votes.value = await (upvotes - downvotes);
   } catch (_) {
     return;
   }
@@ -35,7 +35,7 @@ onBeforeMount(async () => {
   <div>
     <div>
       <p>Votes:</p>
-      <p v-if="loaded">{{ getVotes() }}</p>
+      <p v-if="loaded">{{ votes }}</p>
       <p v-else>...</p>
     </div>
     <VotesForm @refresh-votes="getVotes" v-bind:parent="props.parent" />

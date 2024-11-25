@@ -6,9 +6,9 @@ const emit = defineEmits(["refreshVotes"]);
 
 const placeUpvote = async () => {
   try {
-    await fetchy("/upvotes/upvote", "PUT", {
+    await fetchy("/api/upvotes/upvote/", "PUT", {
       body: {
-        id: props.parent.value,
+        id: props.parent,
       },
     });
   } catch (_) {
@@ -19,9 +19,9 @@ const placeUpvote = async () => {
 
 const placeDownvote = async () => {
   try {
-    await fetchy("/upvotes/downvote", "PUT", {
+    await fetchy("/api/upvotes/downvote/", "PUT", {
       body: {
-        id: props.parent.value,
+        id: props.parent,
       },
     });
   } catch (_) {
