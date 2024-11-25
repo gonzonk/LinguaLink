@@ -100,6 +100,18 @@ class Routes {
     }
   }
 
+  @Router.get("/entries")
+  async getEntries() {
+    const entries = await Dictionarying.getAllEntries()
+    let result = []
+    for(const e of entries) {
+      const postId = e.posts.at(0)
+      const post = await Posting.getPost(postId as ObjectId)
+      result.push({ word: post.word, translation: post.translation })
+    }
+    return result
+  }
+
   @Router.post("/posts")
   async createPost(session: SessionDoc, word: string, translation: string, imageUrl?: string, audioUrl?: string) {
     const user = Sessioning.getUser(session);

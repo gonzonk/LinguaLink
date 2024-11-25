@@ -5,7 +5,7 @@ import { NotAllowedError, NotFoundError } from "./errors";
 
 export interface DictionaryDoc extends BaseDoc {
   word: string;
-  posts: Set<ObjectId>;
+  posts: ObjectId[];
 }
 
 /**
@@ -31,12 +31,12 @@ export default class DictionaryingConcept {
     const entry = await this.dictionary.readOne({ word });
     if (entry) {
       // Add item to existing entry
-      await this.dictionary.partialUpdateOne({ word }, { posts: entry.posts.add(item) });
+      await this.dictionary.partialUpdateOne({ word }, { posts: entry.posts.concat(item) });
     } else {
       // Create entry and add item to it
       await this.dictionary.createOne({
         word,
-        posts: new Set([item]),
+        posts: [item],
       });
     }
   }
@@ -44,9 +44,9 @@ export default class DictionaryingConcept {
   async deleteItem(word: string, item: ObjectId) {
     const entry = await this.dictionary.readOne({ word });
     if (entry) {
-      const updatedPosts = entry.posts;
-      updatedPosts.delete(item);
-      if (updatedPosts.size > 0) {
+      let updatedPosts = entry.posts;
+      updatedPosts = updatedPosts.filter(p => !p.equals(item));
+      if (updatedPosts.length > 0) {
         // Entry still has posts remaining
         await this.dictionary.partialUpdateOne({ word }, { posts: updatedPosts });
       } else {
@@ -61,6 +61,11 @@ export default class DictionaryingConcept {
     return {
       entry,
     };
+  }
+
+  async getAllEntries() {
+    const entries = await this.dictionary.readMany({});
+    return entries;
   }
 
   public async entryExists(word: string) {

@@ -18,7 +18,7 @@ const { currentUsername, isLoggedIn } = storeToRefs(useUserStore());
           <h2>Events</h2>
         </div>
       </RouterLink>
-      <RouterLink>
+      <RouterLink :to="{ name: 'Dictionary' }">
         <div id="dictionary">
           <h2>Dictionary</h2>
         </div>
