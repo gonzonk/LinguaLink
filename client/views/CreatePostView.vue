@@ -14,6 +14,11 @@ const handleErrorMessage = (message: string) => {
 
 <template>
   <main>
+    <RouterLink :to="{ name: 'Posts' }">
+      <div id="posts">
+        <h2>Posts</h2>
+      </div>
+    </RouterLink>
     <h1>Add a word:</h1>
     <section>
       <h1 v-if="isLoggedIn"></h1>

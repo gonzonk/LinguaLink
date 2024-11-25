@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import CreatePostForm from "@/components/Post/CreatePostForm.vue";
+// import CreatePostForm from "@/components/Post/CreatePostForm.vue";
 import EditPostForm from "@/components/Post/EditPostForm.vue";
 import PostComponent from "@/components/Post/PostComponent.vue";
 import { useUserStore } from "@/stores/user";
@@ -13,17 +13,17 @@ const { isLoggedIn } = storeToRefs(useUserStore());
 const loaded = ref(false);
 let posts = ref<Array<Record<string, string>>>([]);
 let editing = ref("");
-let searchAuthor = ref("");
+let searchId = ref("");
 
-async function getPosts(author?: string) {
-  let query: Record<string, string> = author !== undefined ? { author } : {};
+async function getPosts(id?: string) {
+  let query: Record<string, string> = id !== undefined ? { id } : {};
   let postResults;
   try {
     postResults = await fetchy("/api/posts", "GET", { query });
   } catch (_) {
     return;
   }
-  searchAuthor.value = author ? author : "";
+  searchId.value = id ? id : "";
   posts.value = postResults;
 }
 
@@ -38,13 +38,9 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <section v-if="isLoggedIn">
-    <h2>Create a post:</h2>
-    <CreatePostForm @refreshPosts="getPosts" />
-  </section>
   <div class="row">
-    <h2 v-if="!searchAuthor">Posts:</h2>
-    <h2 v-else>Posts by {{ searchAuthor }}:</h2>
+    <h2 v-if="!searchId">Posts:</h2>
+    <h2 v-else>Posts with id {{ searchId }}:</h2>
     <SearchPostForm @getPostsByAuthor="getPosts" />
   </div>
   <section class="posts" v-if="loaded && posts.length !== 0">

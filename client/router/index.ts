@@ -8,6 +8,7 @@ import LoginView from "../views/LoginView.vue";
 import NotFoundView from "../views/NotFoundView.vue";
 import SettingView from "../views/SettingView.vue";
 import DictionaryView from "@/views/DictionaryView.vue";
+import PostListView from "../views/PostListView.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -22,6 +23,11 @@ const router = createRouter({
       name: "Settings",
       component: SettingView,
       meta: { requiresAuth: true },
+    },
+    {
+      path: "/posts",
+      name: "Posts",
+      component: PostListView,
     },
     {
       path: "/create-post",

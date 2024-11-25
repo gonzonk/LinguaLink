@@ -5,11 +5,18 @@ import { formatDate } from "../../utils/formatDate";
 
 const props = defineProps(["post"]);
 const content = ref(props.post.content);
+const word = ref(props.post.word);
+const translation = ref(props.post.translation);
+const imageUrl = ref(props.post.imageUrl);
+const audioUrl = ref(props.post.audioUrl);
+
 const emit = defineEmits(["editPost", "refreshPosts"]);
 
-const editPost = async (content: string) => {
+const editPost = async () => {
   try {
-    await fetchy(`/api/posts/${props.post._id}`, "PATCH", { body: { content: content } });
+    await fetchy(`/api/posts/${props.post._id}`, "PATCH", {
+      body: { word: word.value, translation: translation.value, imageUrl: imageUrl.value, audioUrl: audioUrl.value },
+    });
   } catch (e) {
     return;
   }
@@ -19,9 +26,20 @@ const editPost = async (content: string) => {
 </script>
 
 <template>
-  <form @submit.prevent="editPost(content)">
+  <form @submit.prevent="editPost">
     <p class="author">{{ props.post.author }}</p>
-    <textarea id="content" v-model="content" placeholder="Create a post!" required> </textarea>
+
+    <label for="word">Word:</label>
+    <input id="word" v-model="word" placeholder="word" required />
+
+    <label for="translation">Tags:</label>
+    <input id="translation" v-model="translation" placeholder="translation" />
+
+    <label for="imageUrl">Tags:</label>
+    <input id="imageUrl" v-model="imageUrl" placeholder="imageUrl" />
+
+    <label for="audioUrl">Tags:</label>
+    <input id="audioUrl" v-model="audioUrl" placeholder="audioUrl" />
     <div class="base">
       <menu>
         <li><button class="btn-small pure-button-primary pure-button" type="submit">Save</button></li>

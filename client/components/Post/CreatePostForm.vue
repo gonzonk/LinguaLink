@@ -38,7 +38,7 @@ const emptyForm = () => {
 <template>
   <form @submit.prevent="createPost">
     <label for="word">Word:</label>
-    <input id="word" v-model="word" placeholder="Post Word" required />
+    <input id="word" v-model="word" placeholder="Post word" required />
 
     <label for="translation">Translation:</label>
     <input id="translation" v-model="translation" placeholder="Post translation" required />
