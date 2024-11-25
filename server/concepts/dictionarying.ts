@@ -58,9 +58,7 @@ export default class DictionaryingConcept {
 
   async getEntry(word: string) {
     const entry = await this.dictionary.readOne({ word });
-    return {
-      entry,
-    };
+    return entry;
   }
 
   async getAllEntries() {

@@ -100,6 +100,28 @@ class Routes {
     }
   }
 
+  @Router.get("/posts/:word")
+  async getPostsByWord(word: string) {
+    const entry = await Dictionarying.getEntry(word);
+    if (!entry) {
+      return [];
+    } else {
+      const postIds = entry.posts;
+      const posts = [];
+      for (const postId of postIds) {
+        const post = await Posting.getPost(postId);
+        const { votes } = await Upvoting.getVotes(postId);
+        posts.push({
+          ...post,
+          upvotes: votes!.upvotes,
+          downvotes: votes!.downvotes,
+        });
+      }
+
+      return posts;
+    }
+  }
+
   @Router.get("/entries")
   async getEntries() {
     const entries = await Dictionarying.getAllEntries();
