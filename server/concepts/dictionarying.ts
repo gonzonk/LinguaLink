@@ -29,29 +29,31 @@ export default class DictionaryingConcept {
 
   async addItem(word: string, item: ObjectId) {
     const entry = await this.dictionary.readOne({ word });
-    if(entry) { // Add item to existing entry
-      await this.dictionary.partialUpdateOne({ word }, { posts: entry.posts.add(item) });  
-    } else { // Create entry and add item to it
+    if (entry) {
+      // Add item to existing entry
+      await this.dictionary.partialUpdateOne({ word }, { posts: entry.posts.add(item) });
+    } else {
+      // Create entry and add item to it
       await this.dictionary.createOne({
         word,
         posts: new Set([item]),
       });
-    } 
+    }
   }
 
   async deleteItem(word: string, item: ObjectId) {
     const entry = await this.dictionary.readOne({ word });
-    if(entry) {
-      let updatedPosts = entry.posts;
-      updatedPosts.delete(item)
-      if(updatedPosts.size > 0) { // Entry still has posts remaining
+    if (entry) {
+      const updatedPosts = entry.posts;
+      updatedPosts.delete(item);
+      if (updatedPosts.size > 0) {
+        // Entry still has posts remaining
         await this.dictionary.partialUpdateOne({ word }, { posts: updatedPosts });
-      } else { // Entry has no remaining posts
-        await this.dictionary.deleteOne({ word })
+      } else {
+        // Entry has no remaining posts
+        await this.dictionary.deleteOne({ word });
       }
-  }
-    
-    
+    }
   }
 
   async getEntry(word: string) {
