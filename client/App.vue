@@ -32,7 +32,7 @@ onBeforeMount(async () => {
       </div>
       <ul>
         <div class="create-post" v-if="isLoggedIn">
-          <RouterLink :to="{ name: 'CreatePost' }" :class="{ underline: currentRouteName == 'CreatePost' }"> Create Post </RouterLink>
+          <RouterLink :to="{ name: 'CreatePost' }" :class="{ underline: currentRouteName == 'CreatePost' }"> Add Word </RouterLink>
         </div>
         <li>
           <RouterLink :to="{ name: 'Home' }" :class="{ underline: currentRouteName == 'Home' }"> Home </RouterLink>

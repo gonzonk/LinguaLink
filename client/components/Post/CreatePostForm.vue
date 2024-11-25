@@ -49,7 +49,7 @@ const emptyForm = () => {
     <label for="audioUrl">AudioUrl:</label>
     <input id="audioUrl" v-model="audioUrl" placeholder="Post audioUrl" />
 
-    <button type="submit" class="pure-button-primary pure-button">Create Post</button>
+    <button type="submit" class="pure-button-primary pure-button">Add Word</button>
   </form>
 </template>
 
