@@ -35,9 +35,13 @@ export default class UpvotingConcept {
     await this.assertUserIsReviewer(item, user);
     await this.assertUserNotInDownvotes(item, user);
     await this.assertUserNotInUpvotes(item, user);
-    const upvotes = await this.upvotes.readOne({ item: item });
+    let upvotes = await this.upvotes.readOne({ item: item });
     if (!upvotes) {
-      throw new NotFoundError(`Item ${item} does not exist!`);
+      await this.upvotes.createOne({ item: item, upvotes: new Set(), downvotes: new Set(), reviewers: new Set() });
+      upvotes = await this.upvotes.readOne({ item: item });
+    }
+    if (!upvotes) {
+      throw new NotFoundError("Just created new doc, this shouldnt happen");
     }
     const newUpvotes = upvotes.upvotes;
     newUpvotes.add(user);
@@ -49,9 +53,13 @@ export default class UpvotingConcept {
     await this.assertUserIsReviewer(item, user);
     await this.assertUserNotInDownvotes(item, user);
     await this.assertUserNotInUpvotes(item, user);
-    const upvotes = await this.upvotes.readOne({ item: item });
+    let upvotes = await this.upvotes.readOne({ item: item });
     if (!upvotes) {
-      throw new NotFoundError(`Item ${item} does not exist!`);
+      await this.upvotes.createOne({ item: item, upvotes: new Set(), downvotes: new Set(), reviewers: new Set() });
+      upvotes = await this.upvotes.readOne({ item: item });
+    }
+    if (!upvotes) {
+      throw new NotFoundError("Just created new doc, this shouldnt happen");
     }
     const newDownvotes = upvotes.downvotes;
     newDownvotes.add(user);
@@ -86,7 +94,7 @@ export default class UpvotingConcept {
   async getUpvoteCount(item: ObjectId) {
     const upvotes = await this.upvotes.readOne({ item: item });
     if (!upvotes) {
-      throw new NotFoundError(`Item ${item} does not exist!`);
+      return { numberUpvotes: 0 };
     }
     return { numberUpvotes: upvotes.upvotes.size };
   }
@@ -94,7 +102,7 @@ export default class UpvotingConcept {
   async getDownvoteCount(item: ObjectId) {
     const upvotes = await this.upvotes.readOne({ item: item });
     if (!upvotes) {
-      throw new NotFoundError(`Item ${item} does not exist!`);
+      return { numberUpvotes: 0 };
     }
     return { numberUpvotes: upvotes.downvotes.size };
   }
