@@ -5,13 +5,13 @@ import { NotAllowedError, NotFoundError } from "./errors";
 
 export interface UpvoteDoc extends BaseDoc {
   item: ObjectId;
-  upvotes: Set<ObjectId>;
-  downvotes: Set<ObjectId>;
-  reviewers: Set<ObjectId>;
+  upvotes: ObjectId[];
+  downvotes: ObjectId[];
+  reviewers: ObjectId[];
 }
 
 /**
- * concept: Rating[Content]
+ * concept: Upvoting[Content]
  */
 export default class UpvotingConcept {
   public readonly upvotes: DocCollection<UpvoteDoc>;
@@ -24,11 +24,11 @@ export default class UpvotingConcept {
   }
 
   async getVotes(item: ObjectId) {
-    const upvotes = await this.upvotes.readOne({ item: item });
-    if (!upvotes) {
+    const votes = await this.upvotes.readOne({ item: item });
+    if (!votes) {
       throw new NotFoundError(`Item ${item} does not exist!`);
     }
-    return { msg: "votes found", votes: upvotes };
+    return { msg: "votes found", votes: votes };
   }
 
   async upvoteItem(item: ObjectId, user: ObjectId) {
@@ -37,14 +37,14 @@ export default class UpvotingConcept {
     await this.assertUserNotInUpvotes(item, user);
     let upvotes = await this.upvotes.readOne({ item: item });
     if (!upvotes) {
-      await this.upvotes.createOne({ item: item, upvotes: new Set(), downvotes: new Set(), reviewers: new Set() });
+      await this.upvotes.createOne({ item: item, upvotes: [], downvotes: [], reviewers: [] });
       upvotes = await this.upvotes.readOne({ item: item });
     }
     if (!upvotes) {
       throw new NotFoundError("Just created new doc, this shouldnt happen");
     }
     const newUpvotes = upvotes.upvotes;
-    newUpvotes.add(user);
+    newUpvotes.push(user);
     await this.upvotes.partialUpdateOne({ item: item }, { upvotes: newUpvotes });
     return { msg: "Upvoted" };
   }
@@ -55,14 +55,14 @@ export default class UpvotingConcept {
     await this.assertUserNotInUpvotes(item, user);
     let upvotes = await this.upvotes.readOne({ item: item });
     if (!upvotes) {
-      await this.upvotes.createOne({ item: item, upvotes: new Set(), downvotes: new Set(), reviewers: new Set() });
+      await this.upvotes.createOne({ item: item, upvotes: [], downvotes: [], reviewers: [] });
       upvotes = await this.upvotes.readOne({ item: item });
     }
     if (!upvotes) {
       throw new NotFoundError("Just created new doc, this shouldnt happen");
     }
     const newDownvotes = upvotes.downvotes;
-    newDownvotes.add(user);
+    newDownvotes.push(user);
     await this.upvotes.partialUpdateOne({ item: item }, { upvotes: newDownvotes });
     return { msg: "Downvoted" };
   }
@@ -73,8 +73,7 @@ export default class UpvotingConcept {
     if (!upvotes) {
       throw new NotFoundError(`Item ${item} does not exist!`);
     }
-    const newUpvotes = upvotes.upvotes;
-    newUpvotes.delete(user);
+    const newUpvotes = upvotes.upvotes.filter((p) => !p.equals(user));
     await this.upvotes.partialUpdateOne({ item: item }, { upvotes: newUpvotes });
     return { msg: "Upvote removed" };
   }
@@ -85,8 +84,7 @@ export default class UpvotingConcept {
     if (!upvotes) {
       throw new NotFoundError(`Item ${item} does not exist!`);
     }
-    const newDownvotes = upvotes.downvotes;
-    newDownvotes.delete(user);
+    const newDownvotes = upvotes.downvotes.filter((p) => !p.equals(user));
     await this.upvotes.partialUpdateOne({ item: item }, { upvotes: newDownvotes });
     return { msg: "Downvote removed" };
   }
@@ -96,7 +94,7 @@ export default class UpvotingConcept {
     if (!upvotes) {
       return { numberUpvotes: 0 };
     }
-    return { numberUpvotes: upvotes.upvotes.size };
+    return { numberUpvotes: upvotes.upvotes.length };
   }
 
   async getDownvoteCount(item: ObjectId) {
@@ -104,7 +102,7 @@ export default class UpvotingConcept {
     if (!upvotes) {
       return { numberUpvotes: 0 };
     }
-    return { numberUpvotes: upvotes.downvotes.size };
+    return { numberUpvotes: upvotes.downvotes.length };
   }
 
   async assertUserIsReviewer(item: ObjectId, user: ObjectId) {
@@ -112,7 +110,7 @@ export default class UpvotingConcept {
     if (!upvotes) {
       throw new NotFoundError(`Item ${item} does not exist!`);
     }
-    if (!upvotes.reviewers.has(user)) {
+    if (!upvotes.reviewers.includes(user)) {
       throw new NotAllowedError(`User ${user} not in Reviewers`);
     }
   }
@@ -122,7 +120,7 @@ export default class UpvotingConcept {
     if (!upvotes) {
       throw new NotFoundError(`Item ${item} does not exist!`);
     }
-    if (upvotes.downvotes.has(user)) {
+    if (upvotes.downvotes.includes(user)) {
       throw new NotAllowedError(`User ${user} in upvotes`);
     }
   }
@@ -132,7 +130,7 @@ export default class UpvotingConcept {
     if (!upvotes) {
       throw new NotFoundError(`Item ${item} does not exist!`);
     }
-    if (upvotes.upvotes.has(user)) {
+    if (upvotes.upvotes.includes(user)) {
       throw new NotAllowedError(`User ${user} in downvotes`);
     }
   }
@@ -142,7 +140,7 @@ export default class UpvotingConcept {
     if (!upvotes) {
       throw new NotFoundError(`Item ${item} does not exist!`);
     }
-    if (!upvotes.downvotes.has(user)) {
+    if (!upvotes.downvotes.includes(user)) {
       throw new NotAllowedError(`User ${user} not in upvotes`);
     }
   }
@@ -152,7 +150,7 @@ export default class UpvotingConcept {
     if (!upvotes) {
       throw new NotFoundError(`Item ${item} does not exist!`);
     }
-    if (!upvotes.upvotes.has(user)) {
+    if (!upvotes.upvotes.includes(user)) {
       throw new NotAllowedError(`User ${user} not in downvotes`);
     }
   }
