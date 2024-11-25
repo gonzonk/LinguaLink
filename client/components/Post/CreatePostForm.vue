@@ -3,12 +3,22 @@ import { ref } from "vue";
 import { fetchy } from "../../utils/fetchy";
 
 const content = ref("");
+const word = ref("");
+const translation = ref("");
+const imageUrl = ref("");
+const audioUrl = ref("");
+
 const emit = defineEmits(["refreshPosts"]);
 
-const createPost = async (content: string) => {
+const createPost = async () => {
   try {
     await fetchy("/api/posts", "POST", {
-      body: { content },
+      body: {
+        word: word.value,
+        translation: translation.value,
+        imageUrl: imageUrl.value,
+        audioUrl: audioUrl.value,
+      },
     });
   } catch (_) {
     return;
@@ -18,14 +28,27 @@ const createPost = async (content: string) => {
 };
 
 const emptyForm = () => {
-  content.value = "";
+  word.value = "";
+  translation.value = "";
+  imageUrl.value = "";
+  audioUrl.value = "";
 };
 </script>
 
 <template>
-  <form @submit.prevent="createPost(content)">
-    <label for="content">Post Contents:</label>
-    <textarea id="content" v-model="content" placeholder="Create a post!" required> </textarea>
+  <form @submit.prevent="createPost">
+    <label for="word">Word:</label>
+    <input id="word" v-model="word" placeholder="Post Word" required />
+
+    <label for="translation">Translation:</label>
+    <input id="translation" v-model="translation" placeholder="Post translation" required />
+
+    <label for="imageUrl">ImageUrl:</label>
+    <input id="imageUrl" v-model="imageUrl" placeholder="Post imageUrl" />
+
+    <label for="audioUrl">AudioUrl:</label>
+    <input id="audioUrl" v-model="audioUrl" placeholder="Post audioUrl" />
+
     <button type="submit" class="pure-button-primary pure-button">Create Post</button>
   </form>
 </template>
