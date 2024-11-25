@@ -29,6 +29,9 @@ export default class UpvotingConcept {
       await this.upvotes.createOne({ item: item, upvotes: [], downvotes: [], reviewers: [] });
       votes = await this.upvotes.readOne({ item: item });
     }
+    if (!votes) {
+      throw new NotFoundError("Just created new doc, this shouldnt happen");
+    }
     return { msg: "votes found", votes: votes };
   }
 

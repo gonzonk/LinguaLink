@@ -192,7 +192,7 @@ class Routes {
     const ItemOid = new ObjectId(id);
     const votes = await Upvoting.getVotes(ItemOid);
     let response;
-    if (votes.votes.upvotes.has(user)) {
+    if (votes.votes.upvotes.includes(user)) {
       response = await Upvoting.removeUpvote(ItemOid, user);
     } else {
       response = await Upvoting.upvoteItem(ItemOid, user);
@@ -206,7 +206,7 @@ class Routes {
     const ItemOid = new ObjectId(id);
     const votes = await Upvoting.getVotes(ItemOid);
     let response;
-    if (votes.votes.downvotes.has(user)) {
+    if (votes.votes.downvotes.includes(user)) {
       response = await Upvoting.removeDownvote(ItemOid, user);
     } else {
       response = await Upvoting.downvoteItem(ItemOid, user);

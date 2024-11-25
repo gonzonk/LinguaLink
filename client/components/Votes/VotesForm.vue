@@ -10,21 +10,12 @@ const audioUrl = ref("");
 
 const emit = defineEmits(["refreshPosts"]);
 
-const placeVote = async () => {
+const placeUpvote = async () => {
   try {
-    await fetchy("/api/votes", "POST", {
-      body: {
-        word: word.value,
-        translation: translation.value,
-        imageUrl: imageUrl.value,
-        audioUrl: audioUrl.value,
-      },
-    });
+    await fetchy("/api/votes", "POST");
   } catch (_) {
     return;
   }
-  emit("refreshPosts");
-  emptyForm();
 };
 
 const emptyForm = () => {
@@ -37,7 +28,7 @@ const emptyForm = () => {
 
 <template>
   <form @submit.prevent="createPost">
-    <button >Upvote</button>
+    <button @click="">Upvote</button>
     <button>Downvote</button>
     <button type="submit" class="pure-button-primary pure-button">Add Word</button>
   </form>
