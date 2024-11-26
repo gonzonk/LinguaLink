@@ -30,6 +30,11 @@ const router = createRouter({
       component: PostListView,
     },
     {
+      path: "/posts/:word",
+      name: "PostsByWord",
+      component: PostListView,
+    },
+    {
       path: "/create-post",
       name: "CreatePost",
       component: CreatePostView,
