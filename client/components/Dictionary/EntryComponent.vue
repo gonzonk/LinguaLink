@@ -1,10 +1,16 @@
 <script setup lang="ts">
+import router from "@/router";
+
 const props = defineProps(["entry"]);
+
+const onEntryClicked = () => {
+  void router.push({ path: `/posts/${props.entry.word}` });
+};
 </script>
 
 <template>
   <main>
-    <div class="container">
+    <div class="container" @click="onEntryClicked">
       <h1 class="entry">{{ props.entry.word }}</h1>
       <h3 class="translation">{{ props.entry.translation }}</h3>
     </div>
