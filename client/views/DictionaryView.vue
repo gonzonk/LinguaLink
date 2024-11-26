@@ -2,10 +2,12 @@
 import { onBeforeMount, ref, computed } from "vue";
 import EntryComponent from "../components/Dictionary/EntryComponent.vue";
 import { fetchy } from "@/utils/fetchy";
+import router from "@/router";
 
 const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXZ";
 const entries = ref([]);
 const selectedLetter = ref("A");
+const searchQuery = ref("");
 const entriesToDisplay = computed(() => {
   return entries.value.filter((e) => {
     const { word } = e;
@@ -26,6 +28,12 @@ onBeforeMount(async () => {
 const onLetterClicked = (letter: string) => {
   selectedLetter.value = letter;
 };
+
+const onSearchButtonClicked = () => {
+  if (searchQuery.value.length > 0) {
+    void router.push({ path: `/posts/${searchQuery.value}` });
+  }
+};
 </script>
 
 <template>
@@ -36,6 +44,11 @@ const onLetterClicked = (letter: string) => {
     </RouterLink>
 
     <h1>Dictionary</h1>
+    <div class="search_bar">
+      <input class="word_input" v-model="searchQuery" />
+      <button class="search-button" @click="onSearchButtonClicked">Search</button>
+    </div>
+
     <h3 style="margin-bottom: 12px">Browse alphabetically</h3>
     <div class="letterContainer">
       <button class="letter" :style="{ backgroundColor: letter === selectedLetter ? '#d4e8fb' : '#f0f8ff' }" v-for="letter in ALPHABET" :key="letter" @click="onLetterClicked(letter)">
@@ -59,6 +72,14 @@ const onLetterClicked = (letter: string) => {
   right: 538px;
 }
 
+.word_input {
+  width: 600px;
+  height: 30px;
+  border-color: black;
+  border-width: 1px 0.2px 1px 1px;
+  resize: none;
+}
+
 .add-word-button {
   background-color: #007bff; /* Blue background */
   color: white; /* White text */
@@ -77,6 +98,29 @@ const onLetterClicked = (letter: string) => {
 
 .add-word-button:focus {
   outline: none; /* Remove focus outline */
+}
+
+.search_bar {
+  display: flex;
+  flex-direction: row;
+  height: 34px;
+}
+
+.search-button {
+  background-color: #007bff; /* Blue background */
+  color: white; /* White text */
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-left: -2px;
+  border-radius: 0px 5px 5px 0px; /* Rounded corners */
+  text-align: center;
+  text-decoration: none; /* Remove underline */
+}
+
+.search-button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
 }
 
 .letterContainer {
