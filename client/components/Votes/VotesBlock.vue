@@ -9,18 +9,10 @@ const loaded = ref(false);
 
 const getVotes = async () => {
   try {
-    const upvotes = await fetchy("/api/upvotes", "GET", {
-      body: {
-        id: props.parent.value,
-      },
-    });
-    const downvotes = await fetchy("/api/downvotes", "GET", {
-      body: {
-        id: props.parent.value,
-      },
-    });
-    votes.value = await (upvotes - downvotes);
-  } catch (_) {
+    const ups = await fetchy(`/api/upvotes/${props.parent._id}`, "GET");
+    const downs = await fetchy(`/api/downvotes/${props.parent._id}`, "GET");
+    votes.value = ups - downs;
+  } catch (e) {
     return;
   }
 };
@@ -34,6 +26,7 @@ onBeforeMount(async () => {
 <template>
   <div>
     <div>
+      <button @click="getVotes">refresh</button>
       <p>Votes:</p>
       <p v-if="loaded">{{ votes }}</p>
       <p v-else>...</p>

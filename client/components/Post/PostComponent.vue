@@ -53,7 +53,7 @@ const deletePost = async () => {
       </li>
     </menu>
     <article class="votes">
-      <VotesBlock v-bind:parent="props.post.id" />
+      <VotesBlock v-bind:parent="props.post" />
     </article>
     <article class="timestamp">
       <p v-if="props.post.dateCreated !== props.post.dateUpdated">Edited on: {{ formatDate(props.post.dateUpdated) }}</p>

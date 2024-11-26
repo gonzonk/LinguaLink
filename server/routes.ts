@@ -208,15 +208,16 @@ class Routes {
     return await Friending.rejectRequest(fromOid, user);
   }
 
-  @Router.put("/upvotes/upvote")
+  @Router.put("/upvotes/upvote/")
   async upvote(session: SessionDoc, id: string) {
     const user = Sessioning.getUser(session);
     const ItemOid = new ObjectId(id);
-    const votes = await Upvoting.getVotes(ItemOid);
+    const upvoted = await Upvoting.usersUpvoted(ItemOid, user);
+    const downvoted = await Upvoting.usersDownvoted(ItemOid, user);
     let response;
-    if (votes.votes.upvotes.includes(user)) {
+    if (upvoted) {
       response = await Upvoting.removeUpvote(ItemOid, user);
-    } else if (votes.votes.downvotes.includes(user)) {
+    } else if (downvoted) {
       await Upvoting.removeDownvote(ItemOid, user);
       response = await Upvoting.upvoteItem(ItemOid, user);
     } else {
@@ -229,11 +230,12 @@ class Routes {
   async downvote(session: SessionDoc, id: string) {
     const user = Sessioning.getUser(session);
     const ItemOid = new ObjectId(id);
-    const votes = await Upvoting.getVotes(ItemOid);
+    const upvoted = await Upvoting.usersUpvoted(ItemOid, user);
+    const downvoted = await Upvoting.usersDownvoted(ItemOid, user);
     let response;
-    if (votes.votes.downvotes.includes(user)) {
+    if (downvoted) {
       response = await Upvoting.removeDownvote(ItemOid, user);
-    } else if (votes.votes.upvotes.includes(user)) {
+    } else if (upvoted) {
       await Upvoting.removeUpvote(ItemOid, user);
       response = await Upvoting.downvoteItem(ItemOid, user);
     } else {
@@ -242,16 +244,30 @@ class Routes {
     return response;
   }
 
-  @Router.get("/upvotes")
+  @Router.get("/upvotes/:id")
   async countUpvotes(id: string) {
     const ItemOid = new ObjectId(id);
     return await Upvoting.getUpvoteCount(ItemOid);
   }
 
-  @Router.get("/downvotes")
+  @Router.get("/downvotes/:id")
   async countDownvotes(id: string) {
     const ItemOid = new ObjectId(id);
     return await Upvoting.getDownvoteCount(ItemOid);
+  }
+
+  @Router.get("/upvotes/user/:id")
+  async userUpvoted(session: SessionDoc, id: string) {
+    const user = Sessioning.getUser(session);
+    const ItemOid = new ObjectId(id);
+    return await Upvoting.usersUpvoted(ItemOid, user);
+  }
+
+  @Router.get("/downvotes/user/:id")
+  async userDownvoted(session: SessionDoc, id: string) {
+    const user = Sessioning.getUser(session);
+    const ItemOid = new ObjectId(id);
+    return await Upvoting.usersDownvoted(ItemOid, user);
   }
 }
 

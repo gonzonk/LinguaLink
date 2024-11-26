@@ -23,6 +23,15 @@ export default class UpvotingConcept {
     this.upvotes = new DocCollection<UpvoteDoc>(name);
   }
 
+  hasObject(votes: ObjectId[], find: ObjectId): boolean {
+    for (const obj of votes) {
+      if (find.equals(obj)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   async getVotes(item: ObjectId) {
     let votes = await this.upvotes.readOne({ item: item });
     if (!votes) {
@@ -35,8 +44,24 @@ export default class UpvotingConcept {
     return { msg: "votes found", votes: votes };
   }
 
+  async usersUpvoted(item: ObjectId, user: ObjectId) {
+    const votes = await this.upvotes.readOne({ item: item });
+    if (!votes) {
+      throw new NotFoundError("On a doc, this shouldnt happen");
+    }
+    return this.hasObject(votes.upvotes, user);
+  }
+
+  async usersDownvoted(item: ObjectId, user: ObjectId) {
+    const votes = await this.upvotes.readOne({ item: item });
+    if (!votes) {
+      throw new NotFoundError("On a doc, this shouldnt happen");
+    }
+    return this.hasObject(votes.downvotes, user);
+  }
+
   async upvoteItem(item: ObjectId, user: ObjectId) {
-    await this.assertUserIsReviewer(item, user);
+    // await this.assertUserIsReviewer(item, user);
     await this.assertUserNotInDownvotes(item, user);
     await this.assertUserNotInUpvotes(item, user);
     let upvotes = await this.upvotes.readOne({ item: item });
@@ -54,7 +79,7 @@ export default class UpvotingConcept {
   }
 
   async downvoteItem(item: ObjectId, user: ObjectId) {
-    await this.assertUserIsReviewer(item, user);
+    // await this.assertUserIsReviewer(item, user);
     await this.assertUserNotInDownvotes(item, user);
     await this.assertUserNotInUpvotes(item, user);
     let upvotes = await this.upvotes.readOne({ item: item });
@@ -67,7 +92,7 @@ export default class UpvotingConcept {
     }
     const newDownvotes = upvotes.downvotes;
     newDownvotes.push(user);
-    await this.upvotes.partialUpdateOne({ item: item }, { upvotes: newDownvotes });
+    await this.upvotes.partialUpdateOne({ item: item }, { downvotes: newDownvotes });
     return { msg: "Downvoted" };
   }
 
@@ -89,7 +114,7 @@ export default class UpvotingConcept {
       throw new NotFoundError(`Item ${item} does not exist!`);
     }
     const newDownvotes = upvotes.downvotes.filter((p) => !p.equals(user));
-    await this.upvotes.partialUpdateOne({ item: item }, { upvotes: newDownvotes });
+    await this.upvotes.partialUpdateOne({ item: item }, { downvotes: newDownvotes });
     return { msg: "Downvote removed" };
   }
 
@@ -98,7 +123,7 @@ export default class UpvotingConcept {
     if (!upvotes) {
       return { numberUpvotes: 0 };
     }
-    return { numberUpvotes: upvotes.upvotes.length };
+    return upvotes.upvotes.length;
   }
 
   async getDownvoteCount(item: ObjectId) {
@@ -106,7 +131,7 @@ export default class UpvotingConcept {
     if (!upvotes) {
       return { numberUpvotes: 0 };
     }
-    return { numberUpvotes: upvotes.downvotes.length };
+    return upvotes.downvotes.length;
   }
 
   async assertUserIsReviewer(item: ObjectId, user: ObjectId) {
@@ -114,18 +139,8 @@ export default class UpvotingConcept {
     if (!upvotes) {
       throw new NotFoundError(`Item ${item} does not exist!`);
     }
-    if (!upvotes.reviewers.includes(user)) {
+    if (!this.hasObject(upvotes.reviewers, user)) {
       throw new NotAllowedError(`User ${user} not in Reviewers`);
-    }
-  }
-
-  async assertUserNotInUpvotes(item: ObjectId, user: ObjectId) {
-    const upvotes = await this.upvotes.readOne({ item: item });
-    if (!upvotes) {
-      throw new NotFoundError(`Item ${item} does not exist!`);
-    }
-    if (upvotes.downvotes.includes(user)) {
-      throw new NotAllowedError(`User ${user} in upvotes`);
     }
   }
 
@@ -134,8 +149,18 @@ export default class UpvotingConcept {
     if (!upvotes) {
       throw new NotFoundError(`Item ${item} does not exist!`);
     }
-    if (upvotes.upvotes.includes(user)) {
+    if (this.hasObject(upvotes.downvotes, user)) {
       throw new NotAllowedError(`User ${user} in downvotes`);
+    }
+  }
+
+  async assertUserNotInUpvotes(item: ObjectId, user: ObjectId) {
+    const upvotes = await this.upvotes.readOne({ item: item });
+    if (!upvotes) {
+      throw new NotFoundError(`Item ${item} does not exist!`);
+    }
+    if (this.hasObject(upvotes.upvotes, user)) {
+      throw new NotAllowedError(`User ${user} in upvotes`);
     }
   }
 
@@ -144,7 +169,7 @@ export default class UpvotingConcept {
     if (!upvotes) {
       throw new NotFoundError(`Item ${item} does not exist!`);
     }
-    if (!upvotes.downvotes.includes(user)) {
+    if (!this.hasObject(upvotes.upvotes, user)) {
       throw new NotAllowedError(`User ${user} not in upvotes`);
     }
   }
@@ -154,7 +179,7 @@ export default class UpvotingConcept {
     if (!upvotes) {
       throw new NotFoundError(`Item ${item} does not exist!`);
     }
-    if (!upvotes.upvotes.includes(user)) {
+    if (!this.hasObject(upvotes.downvotes, user)) {
       throw new NotAllowedError(`User ${user} not in downvotes`);
     }
   }
