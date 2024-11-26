@@ -32,13 +32,13 @@ const editPost = async () => {
     <label for="word">Word:</label>
     <input id="word" v-model="word" placeholder="word" required />
 
-    <label for="translation">Tags:</label>
+    <label for="translation">Translation:</label>
     <input id="translation" v-model="translation" placeholder="translation" />
 
-    <label for="imageUrl">Tags:</label>
+    <label for="imageUrl">imageUrl:</label>
     <input id="imageUrl" v-model="imageUrl" placeholder="imageUrl" />
 
-    <label for="audioUrl">Tags:</label>
+    <label for="audioUrl">audioUrl:</label>
     <input id="audioUrl" v-model="audioUrl" placeholder="audioUrl" />
     <div class="base">
       <menu>

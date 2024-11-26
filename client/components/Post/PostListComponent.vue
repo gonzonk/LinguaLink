@@ -13,17 +13,24 @@ const { isLoggedIn } = storeToRefs(useUserStore());
 const loaded = ref(false);
 let posts = ref<Array<Record<string, string>>>([]);
 let editing = ref("");
-let searchId = ref("");
+let searchWord = ref("");
 
-async function getPosts(id?: string) {
-  let query: Record<string, string> = id !== undefined ? { id } : {};
+async function getPosts(word?: string) {
   let postResults;
   try {
-    postResults = await fetchy("/api/posts", "GET", { query });
+    // Check if the word is provided, if so call the `/posts/:word` route.
+    if (word) {
+      postResults = await fetchy(`/api/posts/${word}`, "GET");
+    } else {
+      // If no word is provided, call the `/posts` route to get all posts.
+      postResults = await fetchy("/api/posts", "GET");
+    }
   } catch (_) {
     return;
   }
-  searchId.value = id ? id : "";
+
+  // Set the search word for UI purposes and update the posts array
+  searchWord.value = word ? word : "";
   posts.value = postResults;
 }
 
@@ -39,9 +46,9 @@ onBeforeMount(async () => {
 
 <template>
   <div class="row">
-    <h2 v-if="!searchId">Posts:</h2>
-    <h2 v-else>Posts with id {{ searchId }}:</h2>
-    <SearchPostForm @getPostsByAuthor="getPosts" />
+    <h2 v-if="!searchWord">Posts:</h2>
+    <h2 v-else>Posts for {{ searchWord }}:</h2>
+    <SearchPostForm @getPostsByWord="getPosts" />
   </div>
   <section class="posts" v-if="loaded && posts.length !== 0">
     <article v-for="post in posts" :key="post._id">

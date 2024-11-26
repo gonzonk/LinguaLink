@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-const author = ref("");
-const emit = defineEmits(["getPostsById"]);
+const word = ref("");
+const emit = defineEmits(["getPostsByWord"]);
 </script>
 
 <template>
-  <form @submit.prevent="emit('getPostsById', author)" class="pure-form">
+  <form @submit.prevent="emit('getPostsByWord', word)" class="pure-form">
     <fieldset>
-      <legend>Search by Id</legend>
-      <input id="id" type="text" v-model="author" placeholder="id" />
+      <legend>Search by word</legend>
+      <input id="word" type="text" v-model="word" placeholder="word" />
       <button type="submit" class="pure-button pure-button-primary">Search</button>
     </fieldset>
   </form>

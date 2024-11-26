@@ -118,7 +118,7 @@ class Routes {
         });
       }
 
-      return posts;
+      return Responses.posts(posts);
     }
   }
 

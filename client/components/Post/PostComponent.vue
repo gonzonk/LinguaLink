@@ -27,7 +27,6 @@ const deletePost = async () => {
   <div v-if="props.post.imageUrl" class="image-container">
     <img :src="props.post.imageUrl" alt="Post image" class="post-image" />
   </div>
-  <!-- <p>{{ props.post.imageUrl }}</p> -->
   <p>{{ props.post.audioUrl }}</p>
 
   <div class="base">
@@ -81,23 +80,20 @@ p {
   color: #333; /* Dark text for contrast */
 }
 
-.post-images {
-  display: flex;
-  align-items: center; /* Center images vertically */
-  justify-content: center; /* Center images horizontally */
-  position: relative; /* Position for arrow buttons */
-}
-
 .image-container {
-  width: 500px; /* Fixed width for the image container */
+  display: flex; /* Use flexbox for the container */
+  justify-content: center; /* Horizontally center the image */
+  align-items: center; /* Vertically center the image */
+  width: 100%; /* Use full width for responsiveness */
   height: 500px; /* Fixed height for the image container */
+  overflow: hidden; /* Hide any overflow (cropping) */
 }
 
 .post-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 8px;
+  max-width: 80%; /* Ensure the image fits within the container */
+  max-height: 90%; /* Ensure the image does not overflow the container */
+  object-fit: cover; /* Ensures the image fills the container while maintaining aspect ratio */
+  border-radius: 8px; /* Optional: rounded corners for the image */
 }
 
 .author {
