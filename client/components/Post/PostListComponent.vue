@@ -6,6 +6,7 @@ import { useUserStore } from "@/stores/user";
 import { fetchy } from "@/utils/fetchy";
 import { storeToRefs } from "pinia";
 import { onBeforeMount, ref } from "vue";
+import { useRoute } from "vue-router";
 import SearchPostForm from "./SearchPostForm.vue";
 
 const { isLoggedIn } = storeToRefs(useUserStore());
@@ -39,7 +40,13 @@ function updateEditing(id: string) {
 }
 
 onBeforeMount(async () => {
-  await getPosts();
+  const { params } = useRoute();
+  console.log(`Route params: ${JSON.stringify(params, null, 2)}`);
+  if (params.word) {
+    await getPosts(params.word as string);
+  } else {
+    await getPosts();
+  }
   loaded.value = true;
 });
 </script>
