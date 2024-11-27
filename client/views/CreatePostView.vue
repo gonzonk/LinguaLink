@@ -16,11 +16,6 @@ const handleErrorMessage = (message: string) => {
   <main>
     <!-- Wrapper for heading and button -->
     <div class="header-wrapper">
-      <!-- RouterLink styled as a button in top-right corner -->
-      <RouterLink :to="{ name: 'Posts' }" class="posts-link">
-        <button class="button-link">Go to Posts</button>
-      </RouterLink>
-
       <h1>Add a word:</h1>
     </div>
 
