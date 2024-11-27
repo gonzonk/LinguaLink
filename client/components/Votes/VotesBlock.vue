@@ -26,7 +26,6 @@ onBeforeMount(async () => {
 <template>
   <div>
     <div>
-      <button @click="getVotes">refresh</button>
       <p>Votes:</p>
       <p v-if="loaded">{{ votes }}</p>
       <p v-else>...</p>
