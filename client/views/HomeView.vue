@@ -13,7 +13,7 @@ const { currentUsername, isLoggedIn } = storeToRefs(useUserStore());
       <h1 v-else>Please login!</h1>
     </section>
     <section id="links">
-      <RouterLink>
+      <RouterLink :to="{}">
         <div id="events">
           <h2>Events</h2>
         </div>
@@ -24,17 +24,17 @@ const { currentUsername, isLoggedIn } = storeToRefs(useUserStore());
         </div>
       </RouterLink>
       <div id="gqw">
-        <RouterLink>
+        <RouterLink :to="{}">
           <div id="groups">
             <h2>Groups</h2>
           </div>
         </RouterLink>
-        <RouterLink>
+        <RouterLink :to="{}">
           <div id="quizzes">
             <h2>Quizzes</h2>
           </div>
         </RouterLink>
-        <RouterLink>
+        <RouterLink :to="{}">
           <div id="wotd">
             <h2>Word of the Day</h2>
           </div>
