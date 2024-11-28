@@ -2,7 +2,17 @@
 import router from "@/router";
 import { useUserStore } from "@/stores/user";
 import { ref } from "vue";
-import { UserRole, Dialects } from "../../stores/user.ts";
+
+enum UserRole {
+  TEACHER = "Teacher",
+  LEARNER = "Learner",
+}
+
+enum Dialects {
+  WEST = "North Island Western",
+  EAST = "North Island Eastern",
+  SOUTH = "South Island",
+}
 
 const username = ref("");
 const password = ref("");

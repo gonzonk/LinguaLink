@@ -1,7 +1,17 @@
 <script setup lang="ts">
 import { useUserStore } from "@/stores/user";
 import { ref } from "vue";
-import { UserRole, Dialects } from "../../stores/user.ts";
+
+enum UserRole {
+  TEACHER = "Teacher",
+  LEARNER = "Learner",
+}
+
+enum Dialects {
+  WEST = "North Island Western",
+  EAST = "North Island Eastern",
+  SOUTH = "South Island",
+}
 
 let username = ref("");
 let currentPassword = ref("");
@@ -33,13 +43,13 @@ async function updateDescription() {
 async function updateRole() {
   await updateUserRole(newRole.value);
   await updateSession();
-  newRole.value = "";
+  newRole.value = UserRole.LEARNER;
 }
 
 async function updateDialect() {
   await updateUserDialect(newDialect.value);
   await updateSession();
-  newDialect.value = "";
+  newDialect.value = Dialects.WEST;
 }
 </script>
 

@@ -1,12 +1,12 @@
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
-export enum UserRole {
+enum UserRole {
   TEACHER = "Teacher",
   LEARNER = "Learner",
 }
 
-export enum Dialects {
+enum Dialects {
   WEST = "North Island Western",
   EAST = "North Island Eastern",
   SOUTH = "South Island",
