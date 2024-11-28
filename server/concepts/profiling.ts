@@ -3,13 +3,13 @@ import DocCollection, { BaseDoc } from "../framework/doc";
 import { BadValuesError, NotAllowedError, NotFoundError } from "./errors";
 
 export enum UserRole {
-  TEACHER = "teacher",
-  LEARNER = "learner",
+  TEACHER = "Teacher",
+  LEARNER = "Learner",
 }
 
 export enum Dialects {
-  WEST = "North Island western",
-  EAST = "North Island eastern",
+  WEST = "North Island Western",
+  EAST = "North Island Eastern",
   SOUTH = "South Island",
 }
 

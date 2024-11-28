@@ -1,22 +1,37 @@
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
+export enum UserRole {
+  TEACHER = "Teacher",
+  LEARNER = "Learner",
+}
+
+export enum Dialects {
+  WEST = "North Island Western",
+  EAST = "North Island Eastern",
+  SOUTH = "South Island",
+}
+
 import { fetchy } from "@/utils/fetchy";
 
 export const useUserStore = defineStore(
   "user",
   () => {
     const currentUsername = ref("");
+    const currentRole = ref("");
+    const currentDialect = ref("");
 
     const isLoggedIn = computed(() => currentUsername.value !== "");
 
     const resetStore = () => {
       currentUsername.value = "";
+      currentDialect.value = "";
+      currentRole.value = "";
     };
 
-    const createUser = async (username: string, password: string) => {
+    const createUser = async (username: string, password: string, description: string, role: UserRole, dialect: Dialects) => {
       await fetchy("/api/users", "POST", {
-        body: { username, password },
+        body: { username, password, description, role, dialect },
       });
     };
 
@@ -28,10 +43,14 @@ export const useUserStore = defineStore(
 
     const updateSession = async () => {
       try {
-        const { username } = await fetchy("/api/session", "GET", { alert: false });
+        const { username, role, dialect } = await fetchy("/api/session", "GET", { alert: false });
         currentUsername.value = username;
+        currentDialect.value = dialect;
+        currentRole.value = role;
       } catch {
         currentUsername.value = "";
+        currentDialect.value = "";
+        currentRole.value = "";
       }
     };
 
@@ -48,6 +67,18 @@ export const useUserStore = defineStore(
       await fetchy("/api/users/password", "PATCH", { body: { currentPassword, newPassword } });
     };
 
+    const updateUserDescription = async (description: string) => {
+      await fetchy("/api/users/description", "PATCH", { body: { description } });
+    };
+
+    const updateUserRole = async (role: UserRole) => {
+      await fetchy("/api/users/role", "PATCH", { body: { role } });
+    };
+
+    const updateUserDialect = async (dialect: Dialects) => {
+      await fetchy("/api/users/dialect", "PATCH", { body: { dialect } });
+    };
+
     const deleteUser = async () => {
       await fetchy("/api/users", "DELETE");
       resetStore();
@@ -55,6 +86,8 @@ export const useUserStore = defineStore(
 
     return {
       currentUsername,
+      currentRole,
+      currentDialect,
       isLoggedIn,
       createUser,
       loginUser,
@@ -62,6 +95,9 @@ export const useUserStore = defineStore(
       logoutUser,
       updateUserUsername,
       updateUserPassword,
+      updateUserDescription,
+      updateUserRole,
+      updateUserDialect,
       deleteUser,
     };
   },

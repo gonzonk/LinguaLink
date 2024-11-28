@@ -4,11 +4,12 @@ import { useUserStore } from "@/stores/user";
 import { storeToRefs } from "pinia";
 import { computed, onBeforeMount } from "vue";
 import { RouterLink, RouterView, useRoute } from "vue-router";
+import ProfilePicComponent from "./components/Profile/ProfilePicComponent.vue";
 
 const currentRoute = useRoute();
 const currentRouteName = computed(() => currentRoute.name);
 const userStore = useUserStore();
-const { isLoggedIn } = storeToRefs(userStore);
+const { isLoggedIn, currentUsername } = storeToRefs(userStore);
 const { toast } = storeToRefs(useToastStore());
 
 // Make sure to update the session before mounting the app in case the user is already logged in
@@ -39,6 +40,9 @@ onBeforeMount(async () => {
         </li>
         <li v-else>
           <RouterLink :to="{ name: 'Login' }" :class="{ underline: currentRouteName == 'Login' }"> Login </RouterLink>
+        </li>
+        <li>
+          <ProfilePicComponent :username="currentUsername" />
         </li>
       </ul>
     </nav>
