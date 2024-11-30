@@ -1,6 +1,7 @@
 import { Profiling } from "./app";
 import { AlreadyFriendsError, FriendNotFoundError, FriendRequestAlreadyExistsError, FriendRequestDoc, FriendRequestNotFoundError } from "./concepts/friending";
 import { PostAuthorNotMatchError, PostDoc } from "./concepts/posting";
+import { EventDoc } from "concepts/eventing";
 import { Router } from "./framework/router";
 
 /**
@@ -25,6 +26,25 @@ export default class Responses {
   static async posts(posts: PostDoc[]) {
     const authors = await Profiling.idsToUsernames(posts.map((post) => post.author));
     return posts.map((post, i) => ({ ...post, author: authors[i] }));
+  }
+
+  /**
+   * Convert EventDoc into more readable format for the frontend by converting the author id into a username.
+   */
+  static async event(event: EventDoc | null) {
+    if (!event) {
+      return event;
+    }
+    const author = await Profiling.getUserById(event.author);
+    return { ...event, author: author.username };
+  }
+
+  /**
+   * Same as {@link event} but for an array of EventDoc for improved performance.
+   */
+  static async events(events: EventDoc[]) {
+    const authors = await Profiling.idsToUsernames(events.map((event) => event.author));
+    return events.map((event, i) => ({ ...event, author: authors[i] }));
   }
 
   /**

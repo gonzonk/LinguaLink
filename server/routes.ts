@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb";
 
 import { Router, getExpressRouter } from "./framework/router";
 
-import { Dictionarying, Friending, Posting, Profiling, Sessioning, Upvoting } from "./app";
+import { Dictionarying, Friending, Posting, Profiling, Sessioning, Upvoting, Eventing } from "./app";
 import { Dialects, UserRole } from "./concepts/profiling";
 import { SessionDoc } from "./concepts/sessioning";
 import Responses from "./responses";
@@ -268,6 +268,42 @@ class Routes {
     const user = Sessioning.getUser(session);
     const ItemOid = new ObjectId(id);
     return await Upvoting.usersDownvoted(ItemOid, user);
+  }
+
+  @Router.get("/events")
+  async getEvents(id?: string) {
+    if (id) {
+      const oid = new ObjectId(id);
+      const event = await Eventing.getEvent(oid);
+      return Responses.event(event);
+    } else {
+      const events = await Eventing.getEvents();
+      return Responses.events(events);
+    }
+  }
+
+  @Router.post("/events")
+  async createEvent(session: SessionDoc, title: string, description: string, time: string, location: string) {
+    const user = Sessioning.getUser(session);
+    const created = await Eventing.create(user, title, description, time, location);
+    return { msg: created.msg, event: await Responses.event(created.event) };
+  }
+
+  @Router.patch("/events/:id")
+  async updateEvent(session: SessionDoc, id: string, title?: string, description?: string, time?: string, location?: string) {
+    const user = Sessioning.getUser(session);
+    const oid = new ObjectId(id);
+    await Eventing.assertAuthorIsUser(oid, user);
+    return await Eventing.update(oid, title, description, time, location);
+  }
+
+  @Router.delete("/events/:id")
+  async deleteEvent(session: SessionDoc, id: string) {
+    const user = Sessioning.getUser(session);
+    const oid = new ObjectId(id);
+    await Eventing.assertAuthorIsUser(oid, user);
+    await Eventing.delete(oid);
+    return { msg: "Event deleted successfully!" };
   }
 }
 
