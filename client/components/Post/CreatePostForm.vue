@@ -38,16 +38,16 @@ const emptyForm = () => {
 <template>
   <form @submit.prevent="createPost">
     <label for="word">Word:</label>
-    <input id="word" v-model="word" placeholder="Post word" required />
+    <input id="word" v-model="word" placeholder="word..." required />
 
     <label for="translation">Translation:</label>
-    <input id="translation" v-model="translation" placeholder="Post translation" required />
+    <input id="translation" v-model="translation" placeholder="translation..." required />
 
     <label for="imageUrl">ImageUrl:</label>
-    <input id="imageUrl" v-model="imageUrl" placeholder="Post imageUrl" />
+    <input id="imageUrl" v-model="imageUrl" placeholder="image url..." />
 
     <label for="audioUrl">AudioUrl:</label>
-    <input id="audioUrl" v-model="audioUrl" placeholder="Post audioUrl" />
+    <input id="audioUrl" v-model="audioUrl" placeholder="audio url..." />
 
     <button type="submit" class="pure-button-primary pure-button">Add Word</button>
   </form>

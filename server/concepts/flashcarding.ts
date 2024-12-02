@@ -10,9 +10,9 @@ export interface FlashcardDoc extends BaseDoc {
 }
 
 /**
- * concept: Upvoting[Content]
+ * concept: FlashcardingConcept
  */
-export default class UpvotingConcept {
+export default class FlashcardingConcept {
   public readonly flashcards: DocCollection<FlashcardDoc>;
 
   hasObject(objects: ObjectId[], find: ObjectId): boolean {

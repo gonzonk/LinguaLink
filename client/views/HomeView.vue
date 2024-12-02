@@ -13,7 +13,7 @@ const { currentUsername, isLoggedIn } = storeToRefs(useUserStore());
       <h1 v-else>Please login!</h1>
     </section>
     <section id="links">
-      <RouterLink :to="{}">
+      <RouterLink :to="{ name: 'Events' }">
         <div id="events">
           <h2>Events</h2>
         </div>

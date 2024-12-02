@@ -10,6 +10,8 @@ import SettingView from "../views/SettingView.vue";
 import DictionaryView from "@/views/DictionaryView.vue";
 import PostListView from "../views/PostListView.vue";
 import ProfileView from "../views/ProfileView.vue";
+import EventListView from "@/views/EventListView.vue";
+import CreateEventForm from "@/components/Event/CreateEventForm.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -44,6 +46,16 @@ const router = createRouter({
       path: "/dictionary",
       name: "Dictionary",
       component: DictionaryView,
+    },
+    {
+      path: "/events",
+      name: "Events",
+      component: EventListView,
+    },
+    {
+      path: "/create-event",
+      name: "CreateEvent",
+      component: CreateEventForm,
     },
     {
       path: "/login",
