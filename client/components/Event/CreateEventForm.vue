@@ -39,11 +39,11 @@ const emptyForm = () => {
     <label for="title">Title:</label>
     <input id="title" v-model="title" placeholder="title..." required />
 
-    <label for="description">Desription:</label>
+    <label for="description">Description:</label>
     <textarea id="description" v-model="description" placeholder="Description..." required></textarea>
 
     <label for="time">Time:</label>
-    <input id="time" v-model="time" placeholder="time..." />
+    <input id="time" v-model="time" type="datetime-local" placeholder="Event time..." required />
 
     <label for="location">Location:</label>
     <input id="location" v-model="location" placeholder="location..." />
@@ -69,5 +69,24 @@ textarea {
   padding: 0.5em;
   border-radius: 4px;
   resize: none;
+}
+
+input,
+textarea {
+  font-family: inherit;
+  font-size: inherit;
+  padding: 0.75em;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+input[type="datetime-local"] {
+  padding: 0.5em;
+  width: 200px; /* Make the time input less wide */
+}
+
+button {
+  padding: 0.75em;
+  font-size: 1em;
 }
 </style>

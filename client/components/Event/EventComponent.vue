@@ -23,7 +23,7 @@ const deleteEvent = async () => {
   <p class="title">{{ props.event.title }}</p>
   <p class="description">{{ props.event.description }}</p>
 
-  <p><strong>Time:</strong> {{ props.event.time }}</p>
+  <p><strong>Time:</strong> {{ formatDate(props.event.time) }}</p>
   <p><strong>Location:</strong>: {{ props.event.location }}</p>
 
   <div class="base">
