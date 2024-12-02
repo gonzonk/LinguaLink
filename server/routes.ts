@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb";
 
 import { Router, getExpressRouter } from "./framework/router";
 
-import { Dictionarying, Friending, Posting, Profiling, Sessioning, Upvoting, Eventing } from "./app";
+import { Dictionarying, Friending, Posting, Profiling, Sessioning, Upvoting, Eventing, Tagging } from "./app";
 import { Dialects, UserRole } from "./concepts/profiling";
 import { SessionDoc } from "./concepts/sessioning";
 import Responses from "./responses";
@@ -111,15 +111,35 @@ class Routes {
       for (const postId of postIds) {
         const post = await Posting.getPost(postId);
         const { votes } = await Upvoting.getVotes(postId);
+        const tags = await Tagging.getItemTags(postId);
         posts.push({
           ...post,
           upvotes: votes!.upvotes,
           downvotes: votes!.downvotes,
+          tags,
         });
       }
 
       return Responses.posts(posts);
     }
+  }
+
+  @Router.post("/tags")
+  async addTag(tag: string, itemId: string) {
+    const oid = new ObjectId(itemId);
+    await Tagging.addTag(tag, oid);
+    return {
+      msg: "Tag added successfully",
+    };
+  }
+
+  @Router.delete("/tags/:tag/:itemId")
+  async removeTag(tag: string, itemId: string) {
+    const oid = new ObjectId(itemId);
+    await Tagging.removeTag(tag, oid);
+    return {
+      msg: "Tag removed successfully",
+    };
   }
 
   @Router.get("/entries")
@@ -132,6 +152,22 @@ class Routes {
       result.push({ word: post.word, translation: post.translation });
     }
     return result;
+  }
+
+  @Router.get("/entries/:tag")
+  async getEntriesByTag(tag: string) {
+    const postIds = await Tagging.getItemsByTag(tag); // Get posts that match the tag
+    const entries = {};
+    for (const postId of postIds) {
+      const post = await Posting.getPost(postId);
+      const { word } = post;
+      if (!(word in entries)) {
+        // No more than one post per entry in the filtered results
+        Object.assign(entries, { word: post });
+      }
+    }
+
+    return Object.values(entries);
   }
 
   @Router.post("/posts")

@@ -18,7 +18,6 @@ const entriesToDisplay = computed(() => {
 onBeforeMount(async () => {
   try {
     const results = await fetchy("/api/entries", "GET");
-    console.log(JSON.stringify(results, null, 2));
     entries.value = results;
   } catch (_) {
     return;
@@ -29,10 +28,16 @@ const onLetterClicked = (letter: string) => {
   selectedLetter.value = letter;
 };
 
-const onSearchButtonClicked = () => {
+const onSearchButtonClicked = async () => {
   if (searchQuery.value.length > 0) {
     void router.push({ path: `/posts/${searchQuery.value}` });
   }
+  // try {
+  //   const results2 = await fetchy("/api/entries/nature", "GET");
+  //   console.log(`results2: ${JSON.stringify(results2, null, 2)}`);
+  // } catch (e) {
+  //   console.log(JSON.stringify(e, null, 2));
+  // }
 };
 </script>
 
