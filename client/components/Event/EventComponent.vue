@@ -20,10 +20,11 @@ const deleteEvent = async () => {
 
 <template>
   <p class="author">{{ props.event.author }}</p>
-  <p class="word">{{ props.event.title }}</p>
+  <p class="title">{{ props.event.title }}</p>
   <p class="description">{{ props.event.description }}</p>
-  <p>{{ props.event.time }}</p>
-  <p>{{ props.event.location }}</p>
+
+  <p><strong>Time:</strong> {{ props.event.time }}</p>
+  <p><strong>Location:</strong>: {{ props.event.location }}</p>
 
   <div class="base">
     <menu v-if="props.event.author == currentUsername">

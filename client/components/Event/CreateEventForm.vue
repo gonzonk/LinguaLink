@@ -40,7 +40,7 @@ const emptyForm = () => {
     <input id="title" v-model="title" placeholder="title..." required />
 
     <label for="description">Desription:</label>
-    <input id="description" v-model="description" placeholder="description..." required />
+    <textarea id="description" v-model="description" placeholder="Description..." required></textarea>
 
     <label for="time">Time:</label>
     <input id="time" v-model="time" placeholder="time..." />

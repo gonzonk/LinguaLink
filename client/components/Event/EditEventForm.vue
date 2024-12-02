@@ -32,7 +32,7 @@ const editEvent = async () => {
     <input id="title" v-model="title" placeholder="title..." required />
 
     <label for="description">Description:</label>
-    <input id="description" v-model="description" placeholder="description..." />
+    <textarea id="description" v-model="description" placeholder="Description..." required></textarea>
 
     <label for="time">Time:</label>
     <input id="time" v-model="time" placeholder="time..." />

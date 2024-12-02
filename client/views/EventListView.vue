@@ -10,14 +10,14 @@ const { currentUsername, isLoggedIn } = storeToRefs(useUserStore());
 <template>
   <main class="home-main">
     <section class="main-title">
-      <h1 v-if="isLoggedIn" class="welcome-message">Welcome, {{ currentUsername }}!</h1>
+      <h1 v-if="isLoggedIn" class="welcome-message">
+        <!-- RouterLink to add event, styled as a blue button -->
+        <RouterLink :to="{ name: 'CreateEvent' }" class="add-event-link">
+          <button class="add-event-button">Add Event</button>
+        </RouterLink>
+      </h1>
       <h1 v-else class="login-message">Please log in!</h1>
     </section>
-
-    <!-- RouterLink to add event, styled as a blue button -->
-    <RouterLink :to="{ name: 'CreateEvent' }" class="add-event-link">
-      <button class="add-event-button">Create Event</button>
-    </RouterLink>
 
     <EventListComponent />
   </main>
@@ -52,8 +52,8 @@ const { currentUsername, isLoggedIn } = storeToRefs(useUserStore());
 /* Style the Add Event button link */
 .add-event-link {
   position: absolute;
-  top: 140px;
-  right: 538px;
+  top: 220px;
+  right: 276px;
 }
 
 .word_input {
