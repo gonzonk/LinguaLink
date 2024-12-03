@@ -32,7 +32,18 @@ async function getPosts(word?: string) {
 
   // Set the search word for UI purposes and update the posts array
   searchWord.value = word ? word : "";
-  posts.value = postResults;
+  // Fetch upvotes and downvotes for each post and calculate net votes
+  for (let post of postResults) {
+    try {
+      const upvotes = await fetchy(`/api/upvotes/${post._id}`, "GET");
+      const downvotes = await fetchy(`/api/downvotes/${post._id}`, "GET");
+      post.netVotes = upvotes - downvotes; // Calculate net votes (upvotes - downvotes)
+    } catch (_) {
+      post.netVotes = 0; // Default net votes to 0 if there's an error
+    }
+  }
+  // Sort posts by net votes in descending order
+  posts.value = postResults.sort((a: { netVotes: number }, b: { netVotes: number }) => b.netVotes - a.netVotes);
 }
 
 function updateEditing(id: string) {
