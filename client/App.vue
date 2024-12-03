@@ -9,7 +9,7 @@ import ProfilePicComponent from "./components/Profile/ProfilePicComponent.vue";
 const currentRoute = useRoute();
 const currentRouteName = computed(() => currentRoute.name);
 const userStore = useUserStore();
-const { isLoggedIn, currentUsername } = storeToRefs(userStore);
+const { isLoggedIn, currentUsername, currentRole } = storeToRefs(userStore);
 const { toast } = storeToRefs(useToastStore());
 
 // Make sure to update the session before mounting the app in case the user is already logged in
@@ -20,10 +20,20 @@ onBeforeMount(async () => {
     // User is not logged in
   }
 });
+
+// Compute role-based class for navbar
+const currentRoleClass = computed(() => {
+  return currentRole.value === "Teacher" ? "teacher-nav" : "learner-nav";
+});
+
+// Text to show in the navbar based on the role
+const roleText = computed(() => {
+  return currentRole.value === "Teacher" ? "Teacher View" : "Learner View";
+});
 </script>
 
 <template>
-  <header>
+  <header :class="currentRoleClass">
     <nav>
       <div class="title">
         <img src="@/assets/images/logo.svg" />
@@ -41,6 +51,10 @@ onBeforeMount(async () => {
         <li v-else>
           <RouterLink :to="{ name: 'Login' }" :class="{ underline: currentRouteName == 'Login' }"> Login </RouterLink>
         </li>
+        <!-- Conditionally display the role-specific link -->
+        <li>
+          <span class="role-view">{{ roleText }}</span>
+        </li>
         <li>
           <ProfilePicComponent :username="currentUsername" />
         </li>
@@ -56,11 +70,12 @@ onBeforeMount(async () => {
 <style scoped>
 @import "./assets/toast.css";
 
+/* Default navbar style */
 nav {
   padding: 1em 2em;
-  background-color: lightgray;
   display: flex;
   align-items: center;
+  transition: background-color 0.3s ease; /* Smooth transition for background color */
 }
 
 h1 {
@@ -80,7 +95,7 @@ img {
 
 a {
   font-size: large;
-  color: black;
+  color: white;
   text-decoration: none;
 }
 
@@ -95,5 +110,41 @@ ul {
 
 .underline {
   text-decoration: underline;
+}
+
+/* Teacher-specific navbar style */
+.teacher-nav {
+  background-color: #c62828; /* Red for Teacher */
+}
+
+.teacher-nav a {
+  color: white;
+}
+
+.teacher-nav .add-word-button {
+  background-color: #d32f2f;
+}
+
+/* Learner-specific navbar style */
+.learner-nav {
+  background-color: #388e3c; /* Green for Learner */
+}
+
+.learner-nav a {
+  color: white;
+}
+
+.learner-nav .add-word-button {
+  background-color: #43a047;
+}
+
+/* Role text style */
+.role-view {
+  font-size: 1.1em;
+  font-weight: bold;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.4); /* Slightly darkened background for contrast */
+  padding: 0.5em 1em;
+  border-radius: 5px;
 }
 </style>
