@@ -3,7 +3,10 @@ import { onBeforeMount, ref, computed } from "vue";
 import EntryComponent from "../components/Dictionary/EntryComponent.vue";
 import { fetchy } from "@/utils/fetchy";
 import router from "@/router";
+import { useUserStore } from "@/stores/user";
+import { storeToRefs } from "pinia";
 
+const { currentRole } = storeToRefs(useUserStore()); // Accessing currentRole from store
 const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXZ";
 const entries = ref([]);
 const selectedLetter = ref("A");
@@ -44,7 +47,7 @@ const onSearchButtonClicked = async () => {
 <template>
   <main class="container">
     <!-- RouterLink to add word, styled as a blue button -->
-    <RouterLink :to="{ name: 'CreatePost' }" class="add-word-link">
+    <RouterLink v-if="currentRole === 'Teacher'" :to="{ name: 'CreatePost' }" class="add-word-link">
       <button class="add-word-button">Add Word</button>
     </RouterLink>
 
