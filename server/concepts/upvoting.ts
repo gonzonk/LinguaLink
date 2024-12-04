@@ -47,7 +47,7 @@ export default class UpvotingConcept {
   async usersUpvoted(item: ObjectId, user: ObjectId) {
     const votes = await this.upvotes.readOne({ item: item });
     if (!votes) {
-      throw new NotFoundError("On a doc, this shouldnt happen");
+      return false;
     }
     return this.hasObject(votes.upvotes, user);
   }
@@ -55,7 +55,7 @@ export default class UpvotingConcept {
   async usersDownvoted(item: ObjectId, user: ObjectId) {
     const votes = await this.upvotes.readOne({ item: item });
     if (!votes) {
-      throw new NotFoundError("On a doc, this shouldnt happen");
+      throw new NotFoundError("");
     }
     return this.hasObject(votes.downvotes, user);
   }

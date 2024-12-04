@@ -36,7 +36,7 @@ const roleText = computed(() => {
   <header :class="currentRoleClass">
     <nav>
       <div class="title">
-        <img src="@/assets/images/logo.svg" />
+        <img src="@/assets/images/logo.png" />
         <RouterLink :to="{ name: 'Home' }">
           <h1>LinguaLink</h1>
         </RouterLink>

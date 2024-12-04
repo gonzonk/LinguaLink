@@ -47,7 +47,54 @@ onBeforeMount(async () => {
 </template>
 
 <style scoped>
-article {
-  background-color: aliceblue;
+div {
+  margin-bottom: 20px;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+div h2 {
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.flashcards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  padding: 20px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.flashcards article {
+  background-color: #f8f9fa;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition:
+    background-color 0.3s ease,
+    transform 0.2s ease;
+}
+
+.flashcards article:hover {
+  background-color: #e9ecef;
+  transform: translateY(-5px);
+}
+
+.flashcards article:active {
+  transform: translateY(0);
+}
+
+p {
+  font-size: 1rem;
+  color: #555;
+  text-align: center;
+  margin: 20px 0;
 }
 </style>

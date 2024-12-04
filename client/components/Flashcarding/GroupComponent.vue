@@ -27,11 +27,12 @@ async function deleteGroup() {
 
 <template>
   <main v-if="!flashcarding">
-    <h1>Group page</h1>
-    <h1>{{ props.group.name }}</h1>
-    <h2>By: {{ props.group.authorName }}</h2>
-    <button class="delete" v-if="currentUsername == group.authorName" v-on:click="deleteGroup">Delete</button>
-    <button class="flashcardButton" v-on:click="() => (flashcarding = !flashcarding)">Flashcard</button>
+    <div class="info">
+      <h1>{{ props.group.name }}</h1>
+      <h2>By: {{ props.group.authorName }}</h2>
+      <button class="delete" v-if="currentUsername == group.authorName" v-on:click="deleteGroup">Delete</button>
+      <button class="flashcardButton" v-on:click="() => (flashcarding = !flashcarding)">Flashcard</button>
+    </div>
     <div class="posts">
       <article class="post" v-for="post in props.group.items" :key="post._id">
         <h2>{{ post.word }}</h2>
@@ -44,87 +45,177 @@ async function deleteGroup() {
   </main>
   <main class="flashcarding" v-else>
     <button class="flashcardButton" v-on:click="() => (flashcarding = !flashcarding)">Flashcard</button>
-    <button v-on:click="() => (cardIndex = cardIndex - 1 < 0 ? length - 1 : (cardIndex - 1) % length)">{{ `<<<` }}</button>
-    <button v-on:click="() => (cardIndex = (cardIndex + 1) % length)">{{ `>>>` }}</button>
-    <article class="card" v-on:click="() => (flipped = !flipped)">
-      <div class="front" v-if="!flipped">
-        <h2>{{ props.group.items[cardIndex].word }}</h2>
-      </div>
-      <div class="back" v-else>
-        <h2>{{ props.group.items[cardIndex].translation }}</h2>
-        <div v-if="props.group.items[cardIndex].imageUrl" class="image-container">
-          <img :src="props.group.items[cardIndex].imageUrl" alt="Post image" class="post-image" />
+    <div class="cardControls">
+      <button class="changeButton" v-on:click="() => (cardIndex = cardIndex - 1 < 0 ? length - 1 : (cardIndex - 1) % length)">{{ `<<<` }}</button>
+      <article class="card" v-on:click="() => (flipped = !flipped)">
+        <div class="front" v-if="!flipped">
+          <h2>{{ props.group.items[cardIndex].word }}</h2>
         </div>
-      </div>
-    </article>
+        <div class="back" v-else>
+          <h2>{{ props.group.items[cardIndex].translation }}</h2>
+          <div v-if="props.group.items[cardIndex].imageUrl" class="image-container">
+            <img :src="props.group.items[cardIndex].imageUrl" alt="Post image" class="post-image" />
+          </div>
+        </div>
+      </article>
+      <button class="changeButton" v-on:click="() => (cardIndex = (cardIndex + 1) % length)">{{ `>>>` }}</button>
+    </div>
   </main>
 </template>
 
 <style scoped>
-.posts {
+main {
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+.cardControls {
+  display: flex;
+  flex-direction: row;
+  align-content: space-around;
+}
+
+main h1 {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 10px;
+  margin: auto;
+}
+
+main h2 {
+  margin: auto;
+  margin-top: 8px;
+  font-size: 1.25rem;
+  color: #555;
+  margin-bottom: 8px;
+}
+
+main h3 {
+  font-size: 1rem;
+  color: #777;
+}
+
+button {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 1rem;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 10vw;
+  margin: auto;
+  margin-top: 4px;
+}
+
+.info {
   display: flex;
   flex-direction: column;
-  gap: 1em;
+  justify-content: center;
+}
+
+.changeButton {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 1rem;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 10px 5px;
+  margin-left: 5vw;
+  margin-right: 5vw;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+button.delete {
+  background-color: #dc3545;
+}
+
+button.delete:hover {
+  background-color: #c82333;
+}
+
+.posts {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+  gap: 20px;
 }
 
 .post {
-  background-color: var(--base-bg);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-  gap: 1em;
+  background-color: #fff;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.post:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .image-container {
-  display: flex; /* Use flexbox for the container */
-  justify-content: center; /* Horizontally center the image */
-  align-items: center; /* Vertically center the image */
-  width: 100%; /* Use full width for responsiveness */
-  height: 500px; /* Fixed height for the image container */
-  overflow: hidden; /* Hide any overflow (cropping) */
+  margin-top: 10px;
+  text-align: center;
 }
 
 .post-image {
-  max-width: 80%; /* Ensure the image fits within the container */
-  max-height: 90%; /* Ensure the image does not overflow the container */
-  object-fit: cover; /* Ensures the image fills the container while maintaining aspect ratio */
+  max-width: 75%;
+  max-height: 75%;
+  border-radius: 4px;
 }
 
-form {
-  background-color: var(--base-bg);
-  border-radius: 1em;
+.flashcarding {
   display: flex;
   flex-direction: column;
-  gap: 0.5em;
-  padding: 1em;
-}
-
-textarea {
-  font-family: inherit;
-  font-size: inherit;
-  height: 6em;
-  padding: 0.5em;
-  border-radius: 4px;
-  resize: none;
-}
-
-.delete {
-  background-color: red;
-}
-
-.flashcardButton {
-  background-color: aqua;
+  align-items: center;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
 }
 
 .card {
-  background-color: var(--base-bg);
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  width: 50vw;
+  height: 50vh;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card .front,
+.card .back {
   display: flex;
   flex-direction: column;
-  gap: 1em;
+  justify-content: center;
+  align-items: center;
+}
+
+.flashcardButton {
+  margin-bottom: 20px;
 }
 </style>
