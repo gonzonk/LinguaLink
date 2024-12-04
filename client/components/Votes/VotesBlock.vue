@@ -4,14 +4,14 @@ import { fetchy } from "../../utils/fetchy";
 import VotesForm from "./VotesForm.vue";
 
 const props = defineProps(["parent"]);
-const votes = ref(0);
+const upvotes = ref(0);
+const downvotes = ref(0);
 const loaded = ref(false);
 
 const getVotes = async () => {
   try {
-    const ups = await fetchy(`/api/upvotes/${props.parent._id}`, "GET");
-    const downs = await fetchy(`/api/downvotes/${props.parent._id}`, "GET");
-    votes.value = ups - downs;
+    upvotes.value = await fetchy(`/api/upvotes/${props.parent._id}`, "GET");
+    downvotes.value = await fetchy(`/api/downvotes/${props.parent._id}`, "GET");
   } catch (e) {
     return;
   }
@@ -25,12 +25,10 @@ onBeforeMount(async () => {
 
 <template>
   <div>
-    <div>
-      <p>Net Votes:</p>
-      <p v-if="loaded">{{ votes }}</p>
-      <p v-else>...</p>
+    <div v-if="loaded">
+      <VotesForm :upvotes="upvotes" :downvotes="downvotes" :parent="props.parent" @refresh-votes="getVotes" />
     </div>
-    <VotesForm @refresh-votes="getVotes" v-bind:parent="props.parent" />
+    <p v-else>Loading...</p>
   </div>
 </template>
 
