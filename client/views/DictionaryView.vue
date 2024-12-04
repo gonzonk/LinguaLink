@@ -14,7 +14,7 @@ const searchQuery = ref("");
 const entriesToDisplay = computed(() => {
   return entries.value.filter((e) => {
     const { word } = e;
-    return (word as string).startsWith(selectedLetter.value);
+    return (word as string).toLowerCase().startsWith(selectedLetter.value.toLowerCase());
   });
 });
 
@@ -33,7 +33,7 @@ const onLetterClicked = (letter: string) => {
 
 const onSearchButtonClicked = async () => {
   if (searchQuery.value.length > 0) {
-    void router.push({ path: `/posts/${searchQuery.value}` });
+    void router.push({ path: `/posts/${searchQuery.value.toLowerCase()}` });
   }
   // try {
   //   const results2 = await fetchy("/api/entries/nature", "GET");

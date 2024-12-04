@@ -195,7 +195,7 @@ class Routes {
     await Posting.assertAuthorIsUser(oid, user);
     const post = await Posting.getPost(oid);
     await Posting.delete(oid);
-    await Dictionarying.deleteItem(post.word, oid);
+    const entryDeleted = await Dictionarying.deleteItem(post.word, oid);
     return { msg: "Post deleted successfully!" };
   }
 
