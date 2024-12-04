@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { fetchy } from "../../utils/fetchy";
+import { useUserStore } from "@/stores/user";
+import { storeToRefs } from "pinia";
 import router from "@/router";
 
 const flashcarding = ref(false);
@@ -8,6 +10,7 @@ const flipped = ref(false);
 const cardIndex = ref(0);
 const props = defineProps(["group"]);
 const length = props.group.items.length;
+const { currentUsername } = storeToRefs(useUserStore());
 
 console.log("props.group", props.group);
 console.log("props.group.items", props.group.items);
@@ -27,7 +30,7 @@ async function deleteGroup() {
     <h1>Group page</h1>
     <h1>{{ props.group.name }}</h1>
     <h2>By: {{ props.group.authorName }}</h2>
-    <button class="delete" v-on:click="deleteGroup">Delete</button>
+    <button class="delete" v-if="currentUsername == group.authorName" v-on:click="deleteGroup">Delete</button>
     <button class="flashcardButton" v-on:click="() => (flashcarding = !flashcarding)">Flashcard</button>
     <div class="posts">
       <article class="post" v-for="post in props.group.items" :key="post._id">
@@ -40,6 +43,7 @@ async function deleteGroup() {
     </div>
   </main>
   <main class="flashcarding" v-else>
+    <!-- <h1>{{ cardIndex }}</h1> -->
     <button class="flashcardButton" v-on:click="() => (flashcarding = !flashcarding)">Flashcard</button>
     <button v-on:click="() => (cardIndex = (cardIndex - 1) % length)">{{ `<<<` }}</button>
     <button v-on:click="() => (cardIndex = (cardIndex + 1) % length)">{{ `>>>` }}</button>

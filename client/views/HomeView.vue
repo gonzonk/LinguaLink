@@ -26,7 +26,7 @@ const { currentUsername, isLoggedIn } = storeToRefs(useUserStore());
       <div id="gqw">
         <RouterLink :to="{ name: 'FlashcardHomepage' }">
           <div id="groups">
-            <h2>Groups</h2>
+            <h2>Flashcarding</h2>
           </div>
         </RouterLink>
         <RouterLink :to="{}">
