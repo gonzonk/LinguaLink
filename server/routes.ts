@@ -97,7 +97,18 @@ class Routes {
       return Responses.post(post);
     } else {
       const posts = await Posting.getPosts();
-      return Responses.posts(posts);
+      const updatedPosts = [];
+      for (const post of posts) {
+        const { votes } = await Upvoting.getVotes(post._id);
+        const tags = await Tagging.getItemTags(post._id);
+        updatedPosts.push({
+          ...post,
+          upvotes: votes!.upvotes,
+          downvotes: votes!.downvotes,
+          tags,
+        });
+      }
+      return Responses.posts(updatedPosts);
     }
   }
 
