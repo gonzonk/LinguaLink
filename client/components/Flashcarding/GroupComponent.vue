@@ -43,9 +43,9 @@ async function deleteGroup() {
     </div>
   </main>
   <main class="flashcarding" v-else>
-    <!-- <h1>{{ cardIndex }}</h1> -->
+    <h1>{{ cardIndex }}</h1>
     <button class="flashcardButton" v-on:click="() => (flashcarding = !flashcarding)">Flashcard</button>
-    <button v-on:click="() => (cardIndex = (cardIndex - 1) % length)">{{ `<<<` }}</button>
+    <button v-on:click="() => (cardIndex = cardIndex - 1 < 0 ? length - 1 : (cardIndex - 1) % length)">{{ `<<<` }}</button>
     <button v-on:click="() => (cardIndex = (cardIndex + 1) % length)">{{ `>>>` }}</button>
     <article class="card" v-on:click="() => (flipped = !flipped)">
       <div class="front" v-if="!flipped">
