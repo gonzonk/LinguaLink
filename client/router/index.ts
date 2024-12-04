@@ -14,6 +14,7 @@ import EventListView from "@/views/EventListView.vue";
 import CreateEventForm from "@/components/Event/CreateEventForm.vue";
 import FlashcardHomepageView from "@/views/FlashcardHomepageView.vue";
 import GroupView from "@/views/GroupView.vue";
+import WordleView from "@/views/WordleView.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -86,6 +87,11 @@ const router = createRouter({
       name: "Profile",
       component: ProfileView,
       props: true,
+    },
+    {
+      path: "/wordle",
+      name: "Wordle",
+      component: WordleView,
     },
     {
       path: "/:catchAll(.*)",

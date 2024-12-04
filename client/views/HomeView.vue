@@ -34,7 +34,7 @@ const { currentUsername, isLoggedIn } = storeToRefs(useUserStore());
             <h2>Quizzes</h2>
           </div>
         </RouterLink>
-        <RouterLink :to="{}">
+        <RouterLink :to="{ name: 'Wordle' }">
           <div id="wotd">
             <h2>Word of the Day</h2>
           </div>

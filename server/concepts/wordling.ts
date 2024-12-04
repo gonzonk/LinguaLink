@@ -19,8 +19,8 @@ export default class WordlingConcept {
    * Make an instance of Wordling.
    */
   constructor(collectionName: string) {
-    this.possible_words = new DocCollection<WordleDoc>(collectionName);
-    this.previous_words = new DocCollection<WordleDoc>(collectionName);
+    this.possible_words = new DocCollection<WordleDoc>(`${collectionName}-possible`);
+    this.previous_words = new DocCollection<WordleDoc>(`${collectionName}-previous`);
     this.currWord = "";
     this.currDate = "";
   }
@@ -80,8 +80,8 @@ export default class WordlingConcept {
     if (count !== 0) {
       randomIndex = Math.floor(Math.random() * count);
       newWord = wordArray[randomIndex];
-      await this.removeWord(newWord.word);
-      await this.previous_words.createOne({ word: this.currWord });
+      await this.possible_words.deleteOne({ word: newWord.word });
+      await this.previous_words.createOne({ word: newWord.word });
       return newWord;
     }
     wordArray = await this.previous_words.readMany({});

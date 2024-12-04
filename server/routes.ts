@@ -196,6 +196,9 @@ class Routes {
     const post = await Posting.getPost(oid);
     await Posting.delete(oid);
     const entryDeleted = await Dictionarying.deleteItem(post.word, oid);
+    if (entryDeleted) {
+      await Wordling.removeWord(post.word);
+    }
     return { msg: "Post deleted successfully!" };
   }
 
@@ -402,9 +405,11 @@ class Routes {
     return { flashcards: cards };
   }
 
-  @Router.get("/wordle")
+  @Router.get("/wordle/:newDate")
   async handleNewDay(newDate: string) {
-    return await Wordling.handleNewDay(newDate);
+    const word = await Wordling.handleNewDay(newDate);
+    console.log(`word is ${word}`);
+    return word;
   }
 }
 
