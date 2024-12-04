@@ -6,7 +6,7 @@ import ProfilingConcept from "./concepts/profiling";
 import SessioningConcept from "./concepts/sessioning";
 import UpvotingConcept from "./concepts/upvoting";
 import TaggingConcept from "./concepts/tagging";
-import FlashcardingConcept from "concepts/flashcarding";
+import FlashcardingConcept from "./concepts/flashcarding";
 
 // The app is a composition of concepts instantiated here
 // and synchronized together in `routes.ts`.
