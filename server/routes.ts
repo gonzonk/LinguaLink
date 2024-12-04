@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb";
 
 import { Router, getExpressRouter } from "./framework/router";
 
-import { Dictionarying, Friending, Posting, Profiling, Sessioning, Upvoting, Eventing } from "./app";
+import { Dictionarying, Friending, Posting, Profiling, Sessioning, Upvoting, Eventing, Flashcarding } from "./app";
 import { Dialects, UserRole } from "./concepts/profiling";
 import { SessionDoc } from "./concepts/sessioning";
 import Responses from "./responses";
@@ -211,6 +211,7 @@ class Routes {
   @Router.put("/upvotes/upvote/")
   async upvote(session: SessionDoc, id: string) {
     const user = Sessioning.getUser(session);
+    await Profiling.assertProfileIsTeacher(user);
     const ItemOid = new ObjectId(id);
     const upvoted = await Upvoting.usersUpvoted(ItemOid, user);
     const downvoted = await Upvoting.usersDownvoted(ItemOid, user);
@@ -229,6 +230,7 @@ class Routes {
   @Router.put("/upvotes/downvote")
   async downvote(session: SessionDoc, id: string) {
     const user = Sessioning.getUser(session);
+    await Profiling.assertProfileIsTeacher(user);
     const ItemOid = new ObjectId(id);
     const upvoted = await Upvoting.usersUpvoted(ItemOid, user);
     const downvoted = await Upvoting.usersDownvoted(ItemOid, user);
@@ -304,6 +306,43 @@ class Routes {
     await Eventing.assertAuthorIsUser(oid, user);
     await Eventing.delete(oid);
     return { msg: "Event deleted successfully!" };
+  }
+
+  @Router.post("/flashcards")
+  async createFlashcards(session: SessionDoc, name: string, item: ObjectId) {
+    const user = Sessioning.getUser(session);
+    const userName = (await Profiling.getUserById(user)).username;
+    await Flashcarding.createFlashcards(user, userName, name, [item]);
+    return { msg: "Flashcards created" };
+  }
+
+  @Router.patch("/flashcards/:name")
+  async updateFlashcards(session: SessionDoc, name: string, item: ObjectId) {
+    const user = Sessioning.getUser(session);
+    await Flashcarding.addToFlashcards(name, user, item);
+    return { msg: "Flashcards updated" };
+  }
+
+  @Router.get("/flashcards/:name")
+  async getFlashcards(session: SessionDoc, name?: string, author?: ObjectId, id?: ObjectId) {
+    let cards;
+    if (id) {
+      cards = await Flashcarding.getFlashcards(id);
+    } else if (author) {
+      cards = await Flashcarding.getFlashcardsByAuthor(author);
+    } else if (name) {
+      cards = await Flashcarding.getFlashcardsByName(name);
+    } else {
+      cards = await Flashcarding.getAllFlashcards();
+    }
+    return { flashcards: cards };
+  }
+
+  @Router.get("/flashcards/authored")
+  async getFlashcardsAuthored(session: SessionDoc) {
+    const user = Sessioning.getUser(session);
+    const cards = await Flashcarding.getFlashcardsByAuthor(user);
+    return { flashcards: cards };
   }
 }
 
