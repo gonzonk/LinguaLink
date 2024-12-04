@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onBeforeMount, ref } from "vue";
 import { fetchy } from "../../utils/fetchy";
+import router from "@/router";
 
 const loaded = ref(false);
 const correctWord = ref("");
@@ -72,6 +73,10 @@ const getCellClass = (status: string) => {
   return "absent";
 };
 
+const goToEntry = () => {
+  void router.push({ path: `/posts/${correctWord.value}` });
+};
+
 onBeforeMount(async () => {
   await resetGame();
   loaded.value = true;
@@ -96,6 +101,7 @@ onBeforeMount(async () => {
 
     <div v-if="gameOver" class="game-over">
       <p>{{ gameWon ? "You won!" : "Game Over! The word was " + correctWord }}</p>
+      <button @click="goToEntry">Learn more about this word!</button>
     </div>
   </div>
 </template>

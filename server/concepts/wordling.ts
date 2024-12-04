@@ -63,7 +63,7 @@ export default class WordlingConcept {
   }
 
   async handleNewDay(newDate: string) {
-    if (newDate !== this.currDate) {
+    if (newDate !== this.currDate && newDate !== "") {
       this.currDate = newDate;
       const newWord = await this.pickWord();
       this.currWord = newWord.word;
