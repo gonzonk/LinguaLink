@@ -6,12 +6,16 @@ const props = defineProps(["entry"]);
 const onEntryClicked = () => {
   void router.push({ path: `/posts/${props.entry.word}` });
 };
+
+const capitalizeStr = (str: string) => {
+  return str.at(0)?.toUpperCase().concat(str.substring(1));
+};
 </script>
 
 <template>
   <main>
     <div class="container" @click="onEntryClicked">
-      <h1 class="entry">{{ props.entry.word }}</h1>
+      <h1 class="entry">{{ capitalizeStr(props.entry.word) }}</h1>
       <h3 class="translation">{{ props.entry.translation }}</h3>
     </div>
   </main>

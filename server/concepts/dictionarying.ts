@@ -19,6 +19,7 @@ export default class DictionaryingConcept {
   }
 
   async deleteEntry(word: string) {
+    word = word.toLowerCase();
     await this.assertEntryExists(word);
     const entry = await this.dictionary.popOne({ word });
     return {
@@ -28,6 +29,7 @@ export default class DictionaryingConcept {
   }
 
   async addItem(word: string, item: ObjectId) {
+    word = word.toLowerCase();
     const entry = await this.dictionary.readOne({ word });
     if (entry) {
       // Add item to existing entry
@@ -35,13 +37,14 @@ export default class DictionaryingConcept {
     } else {
       // Create entry and add item to it
       await this.dictionary.createOne({
-        word,
+        word: word.toLowerCase(),
         posts: [item],
       });
     }
   }
 
   async deleteItem(word: string, item: ObjectId) {
+    word = word.toLowerCase();
     const entry = await this.dictionary.readOne({ word });
     if (entry) {
       let updatedPosts = entry.posts;
@@ -49,14 +52,17 @@ export default class DictionaryingConcept {
       if (updatedPosts.length > 0) {
         // Entry still has posts remaining
         await this.dictionary.partialUpdateOne({ word }, { posts: updatedPosts });
+        return false;
       } else {
         // Entry has no remaining posts
         await this.dictionary.deleteOne({ word });
+        return true;
       }
     }
   }
 
   async getEntry(word: string) {
+    word = word.toLowerCase();
     const entry = await this.dictionary.readOne({ word });
     return entry;
   }
