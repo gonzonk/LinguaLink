@@ -3,12 +3,15 @@ import { useUserStore } from "@/stores/user";
 import { formatDate } from "@/utils/formatDate";
 import { storeToRefs } from "pinia";
 import { fetchy } from "../../utils/fetchy";
+import { onBeforeMount, ref } from "vue";
 import VotesBlock from "../Votes/VotesBlock.vue";
 import AddToGroupForm from "../Flashcarding/AddToGroupForm.vue";
 
 const props = defineProps(["post"]);
 const emit = defineEmits(["editPost", "refreshPosts"]);
 const { currentUsername, currentRole } = storeToRefs(useUserStore());
+
+const postDialect = ref("");
 
 const deletePost = async () => {
   try {
@@ -18,10 +21,24 @@ const deletePost = async () => {
   }
   emit("refreshPosts");
 };
+
+const getDialect = async () => {
+  try {
+    const { dialect } = await fetchy(`/api/users/${props.post.author}`, "GET");
+    postDialect.value = dialect;
+  } catch (_) {
+    postDialect.value = "";
+  }
+};
+
+onBeforeMount(async () => {
+  await getDialect();
+});
 </script>
 
 <template>
   <p class="author">{{ props.post.author }}</p>
+  <p class="dialect">{{ postDialect }}</p>
   <p class="word">{{ props.post.word }}</p>
   <p class="translation">{{ props.post.translation }}</p>
 
