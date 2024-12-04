@@ -7,10 +7,10 @@ const { currentUsername, isLoggedIn } = storeToRefs(useUserStore());
 
 <template>
   <main>
-    <h1>Home Page</h1>
+    <h1 class="main-title">Te Reo Māori Hub - The Māori Language Hub!</h1>
     <section>
-      <h1 v-if="isLoggedIn">Welcome {{ currentUsername }}!</h1>
-      <h1 v-else>Please login!</h1>
+      <h1 v-if="isLoggedIn" class="welcome-title">Welcome {{ currentUsername }}!</h1>
+      <h1 v-else class="welcome-title">Please login!</h1>
     </section>
     <section id="links">
       <RouterLink :to="{ name: 'Events' }">
@@ -45,6 +45,22 @@ const { currentUsername, isLoggedIn } = storeToRefs(useUserStore());
 </template>
 
 <style scoped>
+/* Center the main title */
+.main-title {
+  text-align: center;
+  font-size: 2em;
+  margin: 20px 0;
+  color: #333;
+}
+
+/* Center the welcome title */
+.welcome-title {
+  text-align: center;
+  font-size: 1.5em;
+  margin: 10px 0;
+  color: #444;
+}
+
 #links {
   display: flex;
   justify-content: center;
