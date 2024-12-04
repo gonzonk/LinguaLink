@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import { onBeforeMount, ref } from "vue";
 import { fetchy } from "../../utils/fetchy";
 
@@ -68,4 +68,4 @@ textarea {
   border-radius: 4px;
   resize: none;
 }
-</style>
+</style> -->

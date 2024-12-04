@@ -94,7 +94,7 @@ export default class FlashcardingConcept {
   }
 
   async getCollectionsByItem(item: ObjectId) {
-    const matches = await this.flashcards.readMany({ items: item });
+    const matches = await this.flashcards.collection.find({ items: item });
     return { matchingCollections: matches };
   }
 
