@@ -8,6 +8,7 @@ import { SessionDoc } from "./concepts/sessioning";
 import Responses from "./responses";
 
 import { z } from "zod";
+import { PostDoc } from "concepts/posting";
 
 /**
  * Web server routes for the app. Implements synchronizations between concepts.
@@ -345,16 +346,18 @@ class Routes {
   }
 
   @Router.post("/flashcards")
-  async createFlashcards(session: SessionDoc, name: string, item: ObjectId) {
+  async createFlashcards(session: SessionDoc, name: string, item: PostDoc) {
     const user = Sessioning.getUser(session);
     const userName = (await Profiling.getUserById(user)).username;
-    await Flashcarding.createFlashcards(user, userName, name, [item]);
+    console.log("post item", item);
+    await Flashcarding.createFlashcards(user, userName, name, item);
     return { msg: "Flashcards created" };
   }
 
   @Router.patch("/flashcards/:name")
-  async updateFlashcards(session: SessionDoc, name: string, item: ObjectId) {
+  async updateFlashcards(session: SessionDoc, name: string, item: PostDoc) {
     const user = Sessioning.getUser(session);
+    console.log("patch item", item);
     await Flashcarding.addToFlashcards(name, user, item);
     return { msg: "Flashcards updated" };
   }
@@ -363,18 +366,35 @@ class Routes {
   async getFlashcards(session: SessionDoc, name?: string, author?: ObjectId, id?: ObjectId) {
     let cards;
     if (id) {
+      console.log("id");
       cards = await Flashcarding.getFlashcards(id);
     } else if (author) {
+      console.log("author");
       cards = await Flashcarding.getFlashcardsByAuthor(author);
     } else if (name) {
+      console.log("name");
       cards = await Flashcarding.getFlashcardsByName(name);
     } else {
+      console.log("all");
       cards = await Flashcarding.getAllFlashcards();
     }
     return { flashcards: cards };
   }
 
-  @Router.get("/flashcards/authored")
+  @Router.delete("/flashcards/:name")
+  async deleteGroup(session: SessionDoc, name: string) {
+    const user = Sessioning.getUser(session);
+    await Flashcarding.deleteFlashcards(user, name);
+    return { msg: "group deleted" };
+  }
+
+  @Router.get("/flashcards")
+  async getAllFlashcards() {
+    const cards = await Flashcarding.getAllFlashcards();
+    return { flashcards: cards };
+  }
+
+  @Router.get("/authoredFlashcards")
   async getFlashcardsAuthored(session: SessionDoc) {
     const user = Sessioning.getUser(session);
     const cards = await Flashcarding.getFlashcardsByAuthor(user);

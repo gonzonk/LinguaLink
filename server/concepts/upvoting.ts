@@ -121,7 +121,7 @@ export default class UpvotingConcept {
   async getUpvoteCount(item: ObjectId) {
     const upvotes = await this.upvotes.readOne({ item: item });
     if (!upvotes) {
-      return { numberUpvotes: 0 };
+      return 0;
     }
     return upvotes.upvotes.length;
   }
@@ -129,7 +129,7 @@ export default class UpvotingConcept {
   async getDownvoteCount(item: ObjectId) {
     const upvotes = await this.upvotes.readOne({ item: item });
     if (!upvotes) {
-      return { numberUpvotes: 0 };
+      return 0;
     }
     return upvotes.downvotes.length;
   }

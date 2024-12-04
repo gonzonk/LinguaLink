@@ -4,6 +4,7 @@ import { formatDate } from "@/utils/formatDate";
 import { storeToRefs } from "pinia";
 import { fetchy } from "../../utils/fetchy";
 import VotesBlock from "../Votes/VotesBlock.vue";
+import AddToGroupForm from "../Flashcarding/AddToGroupForm.vue";
 
 const props = defineProps(["post"]);
 const emit = defineEmits(["editPost", "refreshPosts"]);
@@ -59,6 +60,9 @@ const deletePost = async () => {
       <p v-if="props.post.dateCreated !== props.post.dateUpdated">Edited on: {{ formatDate(props.post.dateUpdated) }}</p>
       <p v-else>Created on: {{ formatDate(props.post.dateCreated) }}</p>
     </article>
+  </div>
+  <div>
+    <AddToGroupForm v-bind:parent="props.post" />
   </div>
 </template>
 

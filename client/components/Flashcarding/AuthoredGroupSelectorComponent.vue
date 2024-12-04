@@ -4,7 +4,6 @@ import { useUserStore } from "@/stores/user";
 import { fetchy } from "@/utils/fetchy";
 import { storeToRefs } from "pinia";
 import { onBeforeMount, ref } from "vue";
-import router from "@/router";
 
 const { isLoggedIn } = storeToRefs(useUserStore());
 
@@ -18,14 +17,8 @@ async function getFlashcards() {
   } catch (_) {
     return;
   }
-  flashcards.value = flashcardGet.flashcards;
+  flashcards.value = flashcardGet;
 }
-
-const onClick = (group: Record<string, string>) => {
-  console.log("group", group);
-  console.log("name", group.name);
-  void router.push({ path: `/groups/${group.name}` });
-};
 
 onBeforeMount(async () => {
   await getFlashcards();
@@ -38,7 +31,7 @@ onBeforeMount(async () => {
     <h2>Groups:</h2>
   </div>
   <section class="flashcards" v-if="loaded && flashcards.length !== 0">
-    <article v-for="group in flashcards" :key="group._id" v-on:click="() => onClick(group)">
+    <article v-for="group in flashcards" :key="group._id">
       <FlashcardsCardComponent :group="group" />
     </article>
   </section>
@@ -46,8 +39,4 @@ onBeforeMount(async () => {
   <p v-else>Loading...</p>
 </template>
 
-<style scoped>
-article {
-  background-color: aliceblue;
-}
-</style>
+<style scoped></style>

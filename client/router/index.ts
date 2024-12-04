@@ -12,6 +12,8 @@ import PostListView from "../views/PostListView.vue";
 import ProfileView from "../views/ProfileView.vue";
 import EventListView from "@/views/EventListView.vue";
 import CreateEventForm from "@/components/Event/CreateEventForm.vue";
+import FlashcardHomepageView from "@/views/FlashcardHomepageView.vue";
+import GroupView from "@/views/GroupView.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -36,6 +38,16 @@ const router = createRouter({
       path: "/posts/:word",
       name: "PostsByWord",
       component: PostListView,
+    },
+    {
+      path: "/groups",
+      name: "FlashcardHomepage",
+      component: FlashcardHomepageView,
+    },
+    {
+      path: "/groups/:name",
+      name: "GroupPage",
+      component: GroupView,
     },
     {
       path: "/create-post",
