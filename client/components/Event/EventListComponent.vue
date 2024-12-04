@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import CreateEventForm from "./CreateEventForm.vue";
+// import CreateEventForm from "./CreateEventForm.vue";
 import EditEventForm from "./EditEventForm.vue";
 import EventComponent from "./EventComponent.vue";
 import { useUserStore } from "@/stores/user";
@@ -34,12 +34,8 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <section v-if="isLoggedIn">
-    <h2>Create an event:</h2>
-    <CreateEventForm @refreshEvents="getEvents" />
-  </section>
   <div class="row">
-    <h2>Events:</h2>
+    <h1>Events:</h1>
   </div>
   <section class="events" v-if="loaded && events.length !== 0">
     <article v-for="event in events" :key="event._id">

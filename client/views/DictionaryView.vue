@@ -3,7 +3,10 @@ import { onBeforeMount, ref, computed } from "vue";
 import EntryComponent from "../components/Dictionary/EntryComponent.vue";
 import { fetchy } from "@/utils/fetchy";
 import router from "@/router";
+import { useUserStore } from "@/stores/user";
+import { storeToRefs } from "pinia";
 
+const { currentRole } = storeToRefs(useUserStore()); // Accessing currentRole from store
 const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXZ";
 const entries = ref([]);
 const selectedLetter = ref("A");
@@ -18,7 +21,6 @@ const entriesToDisplay = computed(() => {
 onBeforeMount(async () => {
   try {
     const results = await fetchy("/api/entries", "GET");
-    console.log(JSON.stringify(results, null, 2));
     entries.value = results;
   } catch (_) {
     return;
@@ -29,17 +31,23 @@ const onLetterClicked = (letter: string) => {
   selectedLetter.value = letter;
 };
 
-const onSearchButtonClicked = () => {
+const onSearchButtonClicked = async () => {
   if (searchQuery.value.length > 0) {
     void router.push({ path: `/posts/${searchQuery.value}` });
   }
+  // try {
+  //   const results2 = await fetchy("/api/entries/nature", "GET");
+  //   console.log(`results2: ${JSON.stringify(results2, null, 2)}`);
+  // } catch (e) {
+  //   console.log(JSON.stringify(e, null, 2));
+  // }
 };
 </script>
 
 <template>
   <main class="container">
     <!-- RouterLink to add word, styled as a blue button -->
-    <RouterLink :to="{ name: 'CreatePost' }" class="add-word-link">
+    <RouterLink v-if="currentRole === 'Teacher'" :to="{ name: 'CreatePost' }" class="add-word-link">
       <button class="add-word-button">Add Word</button>
     </RouterLink>
 
