@@ -23,6 +23,16 @@ async function deleteGroup() {
     return;
   }
 }
+
+function rightScroll() {
+  cardIndex.value = (cardIndex.value + 1) % length;
+  flipped.value = false;
+}
+
+function leftScroll() {
+  cardIndex.value = cardIndex.value - 1 < 0 ? length - 1 : (cardIndex.value - 1) % length;
+  flipped.value = false;
+}
 </script>
 
 <template>
@@ -46,7 +56,7 @@ async function deleteGroup() {
   <main class="flashcarding" v-else>
     <button class="flashcardButton" v-on:click="() => (flashcarding = !flashcarding)">Flashcard</button>
     <div class="cardControls">
-      <button class="changeButton" v-on:click="() => (cardIndex = cardIndex - 1 < 0 ? length - 1 : (cardIndex - 1) % length)">{{ `<<<` }}</button>
+      <button class="changeButton" v-on:click="leftScroll">{{ `<<<` }}</button>
       <article class="card" v-on:click="() => (flipped = !flipped)">
         <div class="front" v-if="!flipped">
           <h2>{{ props.group.items[cardIndex].word }}</h2>
@@ -58,7 +68,7 @@ async function deleteGroup() {
           </div>
         </div>
       </article>
-      <button class="changeButton" v-on:click="() => (cardIndex = (cardIndex + 1) % length)">{{ `>>>` }}</button>
+      <button class="changeButton" v-on:click="rightScroll"></button>
     </div>
   </main>
 </template>
