@@ -35,58 +35,90 @@ const emptyForm = () => {
 </script>
 
 <template>
-  <form @submit.prevent="createEvent">
+  <form @submit.prevent="createEvent" class="event-form">
     <label for="title">Title:</label>
-    <input id="title" v-model="title" placeholder="title..." required />
+    <input id="title" v-model="title" placeholder="Enter the event title..." required />
 
     <label for="description">Description:</label>
-    <textarea id="description" v-model="description" placeholder="Description..." required></textarea>
+    <textarea id="description" v-model="description" placeholder="Enter a brief description of the event..." required></textarea>
 
     <label for="time">Time:</label>
-    <input id="time" v-model="time" type="datetime-local" placeholder="Event time..." required />
+    <input id="time" v-model="time" type="datetime-local" placeholder="Select the event time..." required />
 
     <label for="location">Location:</label>
-    <input id="location" v-model="location" placeholder="location..." />
+    <input id="location" v-model="location" placeholder="Enter the event location..." />
 
-    <button type="submit" class="pure-button-primary pure-button">Create Event</button>
+    <button type="submit">Create Event</button>
   </form>
 </template>
 
 <style scoped>
-form {
-  background-color: var(--base-bg);
-  border-radius: 1em;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5em;
-  padding: 1em;
+:root {
+  --form-bg: #f8f9fa;
+  --form-border: #ced4da;
+  --form-text: #495057;
+  --button-bg: #007bff;
+  --button-hover-bg: #0056b3;
+  --button-text: #fff;
+  --input-focus: #80bdff;
+  --input-border: #ced4da;
 }
 
-textarea {
-  font-family: inherit;
-  font-size: inherit;
-  height: 6em;
-  padding: 0.5em;
-  border-radius: 4px;
-  resize: none;
+.event-form {
+  background-color: var(--form-bg);
+  border: 1px solid var(--form-border);
+  border-radius: 10px;
+  padding: 1.5em;
+  max-width: 500px;
+  margin: auto;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-input,
-textarea {
-  font-family: inherit;
-  font-size: inherit;
+.event-form label {
+  font-size: 1rem;
+  margin-bottom: 0.5em;
+  color: var(--form-text);
+}
+
+.event-form input,
+.event-form textarea {
+  font-family: "Arial", sans-serif;
+  font-size: 1rem;
   padding: 0.75em;
-  border-radius: 4px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--form-border);
+  border-radius: 5px;
+  margin-bottom: 1em;
+  width: 100%;
+  box-sizing: border-box;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
 }
 
-input[type="datetime-local"] {
-  padding: 0.5em;
-  width: 200px; /* Make the time input less wide */
+.event-form input:focus,
+.event-form textarea:focus {
+  border-color: var(--input-focus);
+  box-shadow: 0 0 5px var(--input-focus);
+  outline: none;
 }
 
-button {
-  padding: 0.75em;
-  font-size: 1em;
+.event-form button {
+  background-color: var(--button-bg);
+  color: var(--button-text);
+  border: none;
+  padding: 0.75em 1.5em;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.event-form button:hover {
+  background-color: var(--button-hover-bg);
+}
+
+.event-form button:focus {
+  outline: 2px solid var(--input-focus);
 }
 </style>

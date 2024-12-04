@@ -38,7 +38,7 @@ onBeforeMount(async () => {
     <h1>Events:</h1>
   </div>
   <section class="events" v-if="loaded && events.length !== 0">
-    <article v-for="event in events" :key="event._id">
+    <article v-for="event in events" :key="event._id" class="event-card">
       <EventComponent v-if="editing !== event._id" :event="event" @refreshEvents="getEvents" @editEvent="updateEditing" />
       <EditEventForm v-else :event="event" @refreshEvents="getEvents" @editEvent="updateEditing" />
     </article>
@@ -68,6 +68,15 @@ article {
   flex-direction: column;
   gap: 0.5em;
   padding: 1em;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+/* Hover effect to enlarge the event */
+article:hover {
+  transform: scale(1.05); /* Scale the article by 5% */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Optional shadow for better hover effect */
 }
 
 .events {

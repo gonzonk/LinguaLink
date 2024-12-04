@@ -7,7 +7,7 @@ import VotesBlock from "../Votes/VotesBlock.vue";
 
 const props = defineProps(["post"]);
 const emit = defineEmits(["editPost", "refreshPosts"]);
-const { currentUsername } = storeToRefs(useUserStore());
+const { currentUsername, currentRole } = storeToRefs(useUserStore());
 
 const deletePost = async () => {
   try {
@@ -52,7 +52,7 @@ const deletePost = async () => {
         </button>
       </li>
     </menu>
-    <article class="votes">
+    <article class="votes" v-if="currentRole === 'Teacher'">
       <VotesBlock v-bind:parent="props.post" />
     </article>
     <article class="timestamp">
