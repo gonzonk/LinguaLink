@@ -26,7 +26,7 @@ onBeforeMount(async () => {
 <template>
   <div>
     <div>
-      <p>Votes:</p>
+      <p>Net Votes:</p>
       <p v-if="loaded">{{ votes }}</p>
       <p v-else>...</p>
     </div>

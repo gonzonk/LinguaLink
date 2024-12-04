@@ -52,7 +52,7 @@ const deletePost = async () => {
         </button>
       </li>
     </menu>
-    <article class="votes" v-if="currentRole === 'Teacher'">
+    <article class="votes">
       <VotesBlock v-bind:parent="props.post" />
     </article>
     <article class="timestamp">

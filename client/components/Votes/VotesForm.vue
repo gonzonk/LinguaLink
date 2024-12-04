@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import { storeToRefs } from "pinia";
 import { fetchy } from "../../utils/fetchy";
 import { ref } from "vue";
 import { onBeforeMount } from "vue";
+import { useUserStore } from "@/stores/user";
 
 const props = defineProps(["parent"]);
 const emit = defineEmits(["refreshVotes"]);
@@ -9,6 +11,8 @@ const emit = defineEmits(["refreshVotes"]);
 let upvoted = ref(false);
 let downvoted = ref(false);
 let loaded = ref(false);
+
+const { currentUsername, currentRole } = storeToRefs(useUserStore());
 
 const voteStatus = async () => {
   try {
@@ -57,10 +61,13 @@ onBeforeMount(async () => {
 
 <template>
   <div>
-    <button @click="placeUpvote" v-if="upvoted">!!Upvoted!!</button>
-    <button @click="placeUpvote" v-else>Upvote</button>
-    <button @click="placeDownvote" v-if="downvoted">!!Downvoted!!</button>
-    <button @click="placeDownvote" v-else>Downvote</button>
+    <!-- Conditionally show voting buttons based on user role -->
+    <div v-if="currentRole !== 'Learner'">
+      <button @click="placeUpvote" v-if="upvoted">!!Upvoted!!</button>
+      <button @click="placeUpvote" v-else>Upvote</button>
+      <button @click="placeDownvote" v-if="downvoted">!!Downvoted!!</button>
+      <button @click="placeDownvote" v-else>Downvote</button>
+    </div>
   </div>
 </template>
 
