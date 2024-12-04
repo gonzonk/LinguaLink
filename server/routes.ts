@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb";
 
 import { Router, getExpressRouter } from "./framework/router";
 
-import { Dictionarying, Friending, Posting, Profiling, Sessioning, Upvoting, Eventing, Tagging, Flashcarding } from "./app";
+import { Dictionarying, Friending, Posting, Profiling, Sessioning, Upvoting, Eventing, Tagging, Flashcarding, Wordling } from "./app";
 import { Dialects, UserRole } from "./concepts/profiling";
 import { SessionDoc } from "./concepts/sessioning";
 import Responses from "./responses";
@@ -176,6 +176,7 @@ class Routes {
     const user = Sessioning.getUser(session);
     const created = await Posting.create(user, word, translation, imageUrl, audioUrl);
     await Dictionarying.addItem(word, created.post!._id);
+    await Wordling.addWord(word);
     return { msg: created.msg, post: await Responses.post(created.post) };
   }
 
@@ -399,6 +400,11 @@ class Routes {
     const user = Sessioning.getUser(session);
     const cards = await Flashcarding.getFlashcardsByAuthor(user);
     return { flashcards: cards };
+  }
+
+  @Router.get("/wordle")
+  async handleNewDay(newDate: string) {
+    return await Wordling.handleNewDay(newDate);
   }
 }
 
