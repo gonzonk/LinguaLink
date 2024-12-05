@@ -31,6 +31,20 @@ export default class TaggingConcept {
     }
   }
 
+  async setTag(tag: string, item: ObjectId) {
+    const record = await this.tags.readOne({ item });
+    if (record) {
+      // Add tag to existing record
+      await this.tags.partialUpdateOne({ item }, { tags: [tag] });
+    } else {
+      // Create entry and add item to it
+      await this.tags.createOne({
+        item,
+        tags: [tag],
+      });
+    }
+  }
+
   async getItemTags(item: ObjectId) {
     const record = await this.tags.readOne({ item });
     if (record) {

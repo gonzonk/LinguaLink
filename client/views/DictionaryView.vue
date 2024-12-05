@@ -7,21 +7,64 @@ import { useUserStore } from "@/stores/user";
 import { storeToRefs } from "pinia";
 
 const { currentRole } = storeToRefs(useUserStore()); // Accessing currentRole from store
-const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXZ";
+const ALPHABET = "AEHIKMNOPRTUW";
+const categories = [
+  "Kinship",
+  "Plants",
+  "Animals",
+  "Body Parts",
+  "Colors",
+  "Numbers",
+  "Time",
+  "Traditional Crafts",
+  "Rituals and Ceremonies",
+  "Mythology and Folklore",
+  "Food and Cooking",
+  "Clothing and Textiles",
+  "Geographical Features",
+  "Weather",
+  "Community Roles",
+  "Law and Governance",
+  "Modern Technology",
+  "Greetings and Farewells",
+  "Expressions of Emotion",
+  "Medicinal Plants and Practices",
+  "Hunting",
+  "Fishing",
+  "Music and Dance",
+  "Art and Symbolism",
+  "Household Items",
+  "Transportation",
+];
 const entries = ref([]);
+const posts = ref([]);
 const selectedLetter = ref("A");
+const selectedTag = ref(categories[0]);
 const searchQuery = ref("");
-const entriesToDisplay = computed(() => {
+const selectedTab = ref(0);
+const alphabeticalEntries = computed(() => {
   return entries.value.filter((e) => {
     const { word } = e;
     return (word as string).toLowerCase().startsWith(selectedLetter.value.toLowerCase());
   });
 });
 
+const tagEntries = computed(() => {
+  return posts.value
+    .map((p: { word: any; translation: any; tags: any }) => ({ word: p.word, translation: p.translation, tags: p.tags }))
+    .filter((p) => {
+      const { tags } = p;
+      return (tags as string[]).find((t) => t === selectedTag.value) !== undefined;
+    });
+});
+
 onBeforeMount(async () => {
   try {
     const results = await fetchy("/api/entries", "GET");
     entries.value = results;
+
+    let postResults = await fetchy("/api/posts", "GET");
+    posts.value = postResults.map((post: { word: any; translation: any; tags: any }) => ({ word: post.word, translation: post.translation, tags: post.tags }));
   } catch (_) {
     return;
   }
@@ -35,36 +78,56 @@ const onSearchButtonClicked = async () => {
   if (searchQuery.value.length > 0) {
     void router.push({ path: `/posts/${searchQuery.value.toLowerCase()}` });
   }
-  // try {
-  //   const results2 = await fetchy("/api/entries/nature", "GET");
-  //   console.log(`results2: ${JSON.stringify(results2, null, 2)}`);
-  // } catch (e) {
-  //   console.log(JSON.stringify(e, null, 2));
-  // }
+};
+
+const onTabSelected = async (tabIndex: number) => {
+  selectedTab.value = tabIndex;
+};
+
+const getTabClass = (tabIndex: number) => {
+  return selectedTab.value === tabIndex ? "selected_tab" : "unselected_tab";
 };
 </script>
 
 <template>
   <main class="container">
     <!-- RouterLink to add word, styled as a blue button -->
-    <RouterLink v-if="currentRole === 'Teacher'" :to="{ name: 'CreatePost' }" class="add-word-link">
-      <button class="add-word-button">Add Word</button>
-    </RouterLink>
 
-    <h1>Dictionary</h1>
+    <div style="display: flex; align-items: center">
+      <h1 style="width: 785px">📚 Dictionary</h1>
+      <RouterLink v-if="currentRole === 'Teacher'" :to="{ name: 'CreatePost' }" class="add-word-link">
+        <button class="add-word-button">Add Word</button>
+      </RouterLink>
+    </div>
+    <h3 class="search_prompt">Search for a word below</h3>
     <div class="search_bar">
       <input class="word_input" v-model="searchQuery" />
       <button class="search-button" @click="onSearchButtonClicked">Search</button>
     </div>
 
-    <h3 style="margin-bottom: 12px">Browse alphabetically</h3>
-    <div class="letterContainer">
-      <button class="letter" :style="{ backgroundColor: letter === selectedLetter ? '#d4e8fb' : '#f0f8ff' }" v-for="letter in ALPHABET" :key="letter" @click="onLetterClicked(letter)">
-        {{ letter }}
-      </button>
+    <div class="browse_container">
+      <div class="browse_tabs">
+        <button class="tab" :class="getTabClass(0)" @click="onTabSelected(0)">BROWSE ALPHABETICALLY</button>
+        <button class="tab" :class="getTabClass(1)" @click="onTabSelected(1)">BROWSE BY CATEGORY</button>
+      </div>
+      <div v-if="selectedTab === 0" class="alphabetical_content">
+        <div class="letterContainer">
+          <button class="letter" :style="{ backgroundColor: letter === selectedLetter ? '#d4e8fb' : '#f0f8ff' }" v-for="letter in ALPHABET" :key="letter" @click="onLetterClicked(letter)">
+            {{ letter }}
+          </button>
+        </div>
+        <EntryComponent v-for="entry in alphabeticalEntries" v-bind:key="entry" :entry="entry" />
+      </div>
+      <div v-else class="tag_content">
+        <div class="selector_container">
+          <p class="tag_prompt"><b>Pick category</b></p>
+          <select class="tag_selector" v-model="selectedTag">
+            <option v-for="category in categories" v-bind:key="category">{{ category }}</option>
+          </select>
+        </div>
+        <EntryComponent v-for="entry in tagEntries" v-bind:key="entry.word" :entry="entry" />
+      </div>
     </div>
-
-    <EntryComponent v-for="entry in entriesToDisplay" v-bind:key="entry" :entry="entry" />
   </main>
 </template>
 
@@ -75,16 +138,54 @@ const onSearchButtonClicked = async () => {
 
 /* Style the Add Word button link */
 .add-word-link {
+  /* position: absolute;
+    top: 186px;
+    right: 338px; */
+}
+
+.tag_selector {
+  width: 200px; /* Adjust width as needed */
+  height: 40px;
+  padding: 10px; /* Add some padding for better appearance */
+  border: 1px solid #ccc; /* Light gray border */
+  border-radius: 10px; /* Rounded corners */
+  color: black;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  background-color: #f0f8ff; /* White background */
+  appearance: none; /* Remove default styling (especially in WebKit browsers) */
+  -webkit-appearance: none; /* Remove default styling in Safari */
+  -moz-appearance: none; /* Remove default styling in Firefox */
+}
+
+.tag_prompt {
+  font-size: 16px;
+  font-style: italic;
+  margin-top: 0px;
+  margin-bottom: 4px;
+  margin-left: 4px;
+}
+
+/* Optional: Style the dropdown arrow */
+.tag_selector::after {
+  content: "▼"; /* Unicode character for down arrow */
   position: absolute;
-  top: 140px;
-  right: 538px;
+  right: 10px;
+  pointer-events: none;
+}
+
+/* Optional: Ensure the select is displayed correctly in a container */
+.selector_container {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 24px;
 }
 
 .word_input {
-  width: 600px;
+  width: 765px;
   height: 30px;
   border-color: black;
   border-width: 1px 0.2px 1px 1px;
+  border-radius: 3px 0px 0px 3px;
   resize: none;
 }
 
@@ -112,13 +213,19 @@ const onSearchButtonClicked = async () => {
   display: flex;
   flex-direction: row;
   height: 34px;
+  margin-bottom: 16px;
+}
+
+.search_prompt {
+  font-size: 18px;
+  margin-bottom: 4px;
 }
 
 .search-button {
   background-color: #007bff; /* Blue background */
   color: white; /* White text */
   border: none;
-  padding: 10px 20px;
+  padding: 10px 40px;
   font-size: 16px;
   cursor: pointer;
   margin-left: -2px;
@@ -133,14 +240,19 @@ const onSearchButtonClicked = async () => {
 
 .letterContainer {
   display: flex;
+  align-self: center;
+  height: 30px;
   flex-direction: row;
-  flex: 1 1 auto;
+  margin-top: 4px;
   margin-bottom: 36px;
 }
 
 .letter {
-  height: 30px;
-  width: 30px;
+  height: 40px;
+  width: 50px;
+  font-weight: 600;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
+  border-radius: 4px;
   margin-right: 8px;
   border-width: 0px;
   background-color: #f0f8ff;
@@ -153,5 +265,66 @@ const onSearchButtonClicked = async () => {
 
 .letter:active {
   background-color: #d4e8fb;
+}
+
+.browse_container {
+  width: 900px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.tab {
+  border: 0;
+  width: 450px;
+  flex-basis: 33.33%;
+  flex-grow: 0;
+  flex: 1 1 auto;
+}
+.unselected_tab {
+  background-color: #f0f8ff;
+  font-weight: 600;
+}
+
+.unselected_tab:hover {
+  background-color: #cbddee;
+}
+
+.selected_tab {
+  background-color: #007bff;
+  font-weight: 600;
+  color: white;
+}
+
+.browse_tabs {
+  display: flex;
+  flex-direction: row;
+  flex: 0 1 40px;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
+}
+
+.alphabetical_content {
+  display: flex;
+  min-height: 500px;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 16px;
+  flex: 1 1 auto;
+}
+
+.tag_content {
+  display: flex;
+  min-height: 500px;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 16px;
+  flex: 1 1 auto;
+}
+
+button:hover {
+  opacity: 1;
+  cursor: pointer;
 }
 </style>

@@ -183,19 +183,25 @@ class Routes {
   }
 
   @Router.post("/posts")
-  async createPost(session: SessionDoc, word: string, translation: string, imageUrl?: string, audioUrl?: string) {
+  async createPost(session: SessionDoc, word: string, translation: string, imageUrl?: string, audioUrl?: string, tag?: string) {
     const user = Sessioning.getUser(session);
     const created = await Posting.create(user, word, translation, imageUrl, audioUrl);
     await Dictionarying.addItem(word, created.post!._id);
     await Wordling.addWord(word);
+    if (tag !== "") {
+      await Tagging.addTag(tag!, created.post!._id);
+    }
     return { msg: created.msg, post: await Responses.post(created.post) };
   }
 
   @Router.patch("/posts/:id")
-  async updatePost(session: SessionDoc, id: string, translation?: string, imageUrl?: string, audioUrl?: string) {
+  async updatePost(session: SessionDoc, id: string, translation?: string, imageUrl?: string, audioUrl?: string, tag?: string) {
     const user = Sessioning.getUser(session);
     const oid = new ObjectId(id);
     await Posting.assertAuthorIsUser(oid, user);
+    if (tag !== "") {
+      await Tagging.setTag(tag!, oid);
+    }
     return await Posting.update(oid, translation, imageUrl, audioUrl);
   }
 

@@ -39,6 +39,7 @@ onBeforeMount(async () => {
 <template>
   <p class="author">{{ props.post.author }}</p>
   <p class="dialect">{{ postDialect }}</p>
+  <p v-if="props.post.tags.length > 0" class="tag">{{ `🏷️ ${props.post.tags.at(0)}` }}</p>
   <p class="word">{{ props.post.word }}</p>
   <p class="translation">{{ props.post.translation }}</p>
 
@@ -120,6 +121,10 @@ p {
 .author {
   font-weight: bold;
   font-size: 1.2em;
+}
+
+.tag {
+  font-size: 1em;
 }
 
 menu {

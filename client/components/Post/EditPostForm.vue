@@ -9,13 +9,43 @@ const word = ref(props.post.word);
 const translation = ref(props.post.translation);
 const imageUrl = ref(props.post.imageUrl);
 const audioUrl = ref(props.post.audioUrl);
+const selectedTag = ref(props.post.tags.length > 0 ? props.post.tags[0] : "");
+
+const tags = [
+  "Kinship",
+  "Plants",
+  "Animals",
+  "Body Parts",
+  "Colors",
+  "Numbers",
+  "Time",
+  "Traditional Crafts",
+  "Rituals and Ceremonies",
+  "Mythology and Folklore",
+  "Food and Cooking",
+  "Clothing and Textiles",
+  "Geographical Features",
+  "Weather",
+  "Community Roles",
+  "Law and Governance",
+  "Modern Technology",
+  "Greetings and Farewells",
+  "Expressions of Emotion",
+  "Medicinal Plants and Practices",
+  "Hunting",
+  "Fishing",
+  "Music and Dance",
+  "Art and Symbolism",
+  "Household Items",
+  "Transportation",
+];
 
 const emit = defineEmits(["editPost", "refreshPosts"]);
 
 const editPost = async () => {
   try {
     await fetchy(`/api/posts/${props.post._id}`, "PATCH", {
-      body: { word: word.value, translation: translation.value, imageUrl: imageUrl.value, audioUrl: audioUrl.value },
+      body: { word: word.value, translation: translation.value, imageUrl: imageUrl.value, audioUrl: audioUrl.value, tag: selectedTag.value },
     });
   } catch (e) {
     return;
@@ -40,6 +70,10 @@ const editPost = async () => {
 
     <label for="audioUrl">audioUrl:</label>
     <input id="audioUrl" v-model="audioUrl" placeholder="audioUrl" />
+    <label for="audioUrl">Tag:</label>
+    <select v-model="selectedTag">
+      <option v-for="tag in tags" v-bind:key="tag">{{ tag }}</option>
+    </select>
     <div class="base">
       <menu>
         <li><button class="btn-small pure-button-primary pure-button" type="submit">Save</button></li>

@@ -16,7 +16,7 @@ const handleErrorMessage = (message: string) => {
   <main>
     <!-- Wrapper for heading and button -->
     <div class="header-wrapper">
-      <h1>Add a word:</h1>
+      <h1>Add a word</h1>
     </div>
 
     <section>
