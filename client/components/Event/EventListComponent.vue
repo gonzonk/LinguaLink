@@ -52,9 +52,10 @@ section {
   display: flex;
   flex-direction: column;
   gap: 1em;
+  margin: 0 auto;
+  max-width: 60em;
 }
 
-section,
 p,
 .row {
   margin: 0 auto;
@@ -62,21 +63,25 @@ p,
 }
 
 article {
-  background-color: var(--base-bg);
-  border-radius: 1em;
+  /* Remove the background and padding if unnecessary */
+  background-color: transparent; /* Ensures no background */
+  padding: 0; /* Removes padding */
+  margin: 0; /* Removes margin */
+
   display: flex;
   flex-direction: column;
   gap: 0.5em;
-  padding: 1em;
   transition:
     transform 0.3s ease,
     box-shadow 0.3s ease;
+  border: none; /* Ensures no border */
+  box-shadow: none; /* Ensures no shadow */
 }
 
 /* Hover effect to enlarge the event */
 article:hover {
   transform: scale(1.05); /* Scale the article by 5% */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Optional shadow for better hover effect */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.01); /* Subtle shadow effect */
 }
 
 .events {
@@ -88,5 +93,12 @@ article:hover {
   justify-content: space-between;
   margin: 0 auto;
   max-width: 60em;
+}
+
+h1 {
+  color: #333; /* Neutral dark gray for better readability */
+  font-family: Arial, sans-serif; /* Clean font for the header */
+  font-size: 2rem;
+  margin-bottom: 0.5em;
 }
 </style>
