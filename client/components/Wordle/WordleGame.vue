@@ -34,17 +34,41 @@ const submitGuess = () => {
 };
 
 const updateGuessRow = (row: { value: string; status: string }[], guess: string) => {
+  const occurrences = countLetterOccurrences(correctWord.value);
+  // Loops through and marks correct positions first to reduce occurrences before looping again
+  // to find correct letters in wrong positions
   for (let i = 0; i < 6; i++) {
     const letter = guess[i];
     if (letter === correctWord.value[i]) {
       row[i] = { value: letter, status: "correct" };
-    } else if (correctWord.value.includes(letter)) {
+      occurrences[letter]--;
+    }
+  }
+  for (let i = 0; i < 6; i++) {
+    const letter = guess[i];
+    if (letter === correctWord.value[i]) {
+      row[i] = { value: letter, status: "correct" };
+    } else if (correctWord.value.includes(letter) && occurrences[letter] !== 0) {
       row[i] = { value: letter, status: "present" };
+      occurrences[letter]--;
     } else {
       row[i] = { value: letter, status: "absent" };
     }
   }
 };
+
+function countLetterOccurrences(word: string): { [key: string]: number } {
+  const letterCount: { [key: string]: number } = {};
+
+  for (const letter of word) {
+    if (letterCount[letter]) {
+      letterCount[letter]++;
+    } else {
+      letterCount[letter] = 1;
+    }
+  }
+  return letterCount;
+}
 
 const resetGame = async () => {
   const currDate = new Date();
