@@ -145,6 +145,11 @@ class Routes {
     };
   }
 
+  @Router.get("/tags")
+  async getAllTags() {
+    return await Tagging.getAllTags();
+  }
+
   @Router.delete("/tags/:tag/:itemId")
   async removeTag(tag: string, itemId: string) {
     const oid = new ObjectId(itemId);

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onBeforeMount } from "vue";
 import { fetchy } from "../../utils/fetchy";
 
 const content = ref("");
@@ -7,6 +7,7 @@ const word = ref("");
 const translation = ref("");
 const imageUrl = ref("");
 const audioUrl = ref("");
+const tags = ref();
 const selectedTag = ref("");
 
 const emit = defineEmits(["refreshPosts"]);
@@ -30,41 +31,22 @@ const createPost = async () => {
   emptyForm();
 };
 
-const tags = [
-  "Kinship",
-  "Plants",
-  "Animals",
-  "Body Parts",
-  "Colors",
-  "Numbers",
-  "Time",
-  "Traditional Crafts",
-  "Rituals and Ceremonies",
-  "Mythology and Folklore",
-  "Food and Cooking",
-  "Clothing and Textiles",
-  "Geographical Features",
-  "Weather",
-  "Community Roles",
-  "Law and Governance",
-  "Modern Technology",
-  "Greetings and Farewells",
-  "Expressions of Emotion",
-  "Medicinal Plants and Practices",
-  "Hunting",
-  "Fishing",
-  "Music and Dance",
-  "Art and Symbolism",
-  "Household Items",
-  "Transportation",
-];
-
 const emptyForm = () => {
   word.value = "";
   translation.value = "";
   imageUrl.value = "";
   audioUrl.value = "";
 };
+
+onBeforeMount(async () => {
+  try {
+    const tagResults = await fetchy("/api/tags", "GET");
+    tags.value = tagResults;
+    selectedTag.value = tags.value.at(0);
+  } catch (_) {
+    return;
+  }
+});
 </script>
 
 <template>

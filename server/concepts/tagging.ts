@@ -54,6 +54,37 @@ export default class TaggingConcept {
     }
   }
 
+  async getAllTags() {
+    return [
+      "Animals",
+      "Art and Symbolism",
+      "Body Parts",
+      "Clothing and Textiles",
+      "Colors",
+      "Community Roles",
+      "Expressions of Emotion",
+      "Fishing",
+      "Food and Cooking",
+      "Geographical Features",
+      "Greetings and Farewells",
+      "Household Items",
+      "Hunting",
+      "Kinship",
+      "Law and Governance",
+      "Medicinal Plants and Practices",
+      "Modern Technology",
+      "Music and Dance",
+      "Mythology and Folklore",
+      "Numbers",
+      "Plants",
+      "Rituals and Ceremonies",
+      "Time",
+      "Traditional Crafts",
+      "Transportation",
+      "Weather",
+    ];
+  }
+
   async getItemsByTag(tag: string) {
     const cursor = this.tags.collection.find({ tags: tag });
     const results = await cursor.toArray();

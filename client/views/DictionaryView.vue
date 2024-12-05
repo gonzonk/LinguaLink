@@ -8,38 +8,12 @@ import { storeToRefs } from "pinia";
 
 const { currentRole } = storeToRefs(useUserStore()); // Accessing currentRole from store
 const ALPHABET = "AEHIKMNOPRTUW";
-const categories = [
-  "Kinship",
-  "Plants",
-  "Animals",
-  "Body Parts",
-  "Colors",
-  "Numbers",
-  "Time",
-  "Traditional Crafts",
-  "Rituals and Ceremonies",
-  "Mythology and Folklore",
-  "Food and Cooking",
-  "Clothing and Textiles",
-  "Geographical Features",
-  "Weather",
-  "Community Roles",
-  "Law and Governance",
-  "Modern Technology",
-  "Greetings and Farewells",
-  "Expressions of Emotion",
-  "Medicinal Plants and Practices",
-  "Hunting",
-  "Fishing",
-  "Music and Dance",
-  "Art and Symbolism",
-  "Household Items",
-  "Transportation",
-];
+
+const tags = ref([]);
 const entries = ref([]);
 const posts = ref([]);
 const selectedLetter = ref("A");
-const selectedTag = ref(categories[0]);
+const selectedTag = ref();
 const searchQuery = ref("");
 const selectedTab = ref(0);
 const alphabeticalEntries = computed(() => {
@@ -63,8 +37,12 @@ onBeforeMount(async () => {
     const results = await fetchy("/api/entries", "GET");
     entries.value = results;
 
-    let postResults = await fetchy("/api/posts", "GET");
+    const postResults = await fetchy("/api/posts", "GET");
     posts.value = postResults.map((post: { word: any; translation: any; tags: any }) => ({ word: post.word, translation: post.translation, tags: post.tags }));
+
+    const tagResults = await fetchy("/api/tags", "GET");
+    tags.value = tagResults;
+    selectedTag.value = tags.value.at(0);
   } catch (_) {
     return;
   }
@@ -122,7 +100,7 @@ const getTabClass = (tabIndex: number) => {
         <div class="selector_container">
           <p class="tag_prompt"><b>Pick category</b></p>
           <select class="tag_selector" v-model="selectedTag">
-            <option v-for="category in categories" v-bind:key="category">{{ category }}</option>
+            <option v-for="tag in tags" v-bind:key="tag">{{ tag }}</option>
           </select>
         </div>
         <EntryComponent v-for="entry in tagEntries" v-bind:key="entry.word" :entry="entry" />
