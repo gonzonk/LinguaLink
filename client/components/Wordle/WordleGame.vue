@@ -85,7 +85,7 @@ onBeforeMount(async () => {
 
 <template>
   <div class="wordle">
-    <h1>Word of the Day</h1>
+    <h1 class="word-of-the-day">Word of the Day</h1>
     <div class="guess-grid">
       <div v-for="(row, rowIndex) in guesses" :key="'row-' + rowIndex" class="guess-row">
         <div v-for="(letter, index) in row" :key="'cell-' + index" class="guess-cell" :class="getCellClass(letter.status)">
@@ -94,14 +94,14 @@ onBeforeMount(async () => {
       </div>
     </div>
 
-    <div class="guess-input">
-      <input type="text" v-model="currentGuess" maxlength="6" @keyup.enter="submitGuess" :disabled="gameOver" placeholder="Enter guess" />
-      <button @click="submitGuess" :disabled="gameOver || !currentGuess">Submit Guess</button>
+    <div v-if="gameOver" class="game-over">
+      <p class="game-over-text">{{ gameWon ? "You won!" : "Game Over! The word was " + correctWord + "." }}</p>
+      <button @click="goToEntry" class="learn-button">Learn more about this word!</button>
     </div>
 
-    <div v-if="gameOver" class="game-over">
-      <p>{{ gameWon ? "You won!" : "Game Over! The word was " + correctWord }}</p>
-      <button @click="goToEntry">Learn more about this word!</button>
+    <div v-else class="guess-input">
+      <input type="text" v-model="currentGuess" maxlength="6" @keyup.enter="submitGuess" :disabled="gameOver" placeholder="Enter guess" />
+      <button @click="submitGuess" :disabled="gameOver || !currentGuess" class="learn-button">Submit</button>
     </div>
   </div>
 </template>
@@ -130,13 +130,13 @@ h1 {
 }
 
 .guess-cell {
-  width: 50px;
-  height: 50px;
-  margin: 2px;
+  width: 70px;
+  height: 70px;
+  margin: 5px;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 1.2rem;
+  font-size: 1.7rem;
   border: 1px solid #ccc;
   text-transform: uppercase;
 }
@@ -177,6 +177,46 @@ button {
 }
 
 .game-over {
-  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center; /* Center the text inside the <p> */
+}
+
+.learn-button {
+  background-color: #e6fffa; /* Light teal background */
+  border: 2px solid #81e6d9; /* Teal border */
+  color: #2c7a7b;
+  font-size: 16px; /* Set text size */
+  padding: 10px 20px; /* Add padding for a larger button */
+  border-radius: 5px; /* Rounded corners */
+  cursor: pointer; /* Change cursor to pointer */
+  transition:
+    background-color 0.3s ease,
+    transform 0.2s ease; /* Smooth transition for hover effects */
+}
+
+.learn-button:hover {
+  background-color: #b2f5ea;
+  transform: scale(1.05); /* Slightly increase size on hover */
+}
+
+.learn-button:active {
+  background-color: #81e0d1;
+}
+
+.word-of-the-day {
+  color: #2c7a7b;
+  font-size: 40px;
+  margin: 5px;
+  padding: 5px;
+}
+
+.game-over-text {
+  font-size: 28px;
+  color: #2c7a7b;
+  margin: 7px;
+  padding: 5px;
 }
 </style>

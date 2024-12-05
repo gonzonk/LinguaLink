@@ -425,7 +425,6 @@ class Routes {
   @Router.get("/wordle/:newDate")
   async handleNewDay(newDate: string) {
     const word = await Wordling.handleNewDay(newDate);
-    console.log(`word is ${word}`);
     return word;
   }
 }
