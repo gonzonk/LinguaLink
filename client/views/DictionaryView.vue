@@ -56,7 +56,7 @@ onBeforeMount(async () => {
     posts.value = postResults.map((post: { word: any; translation: any; tags: any }) => ({ word: post.word, translation: post.translation, tags: post.tags }));
 
     const tagResults = await fetchy("/api/tags", "GET");
-    tags.value = tagResults;
+    tags.value = tagResults.filter((t: string) => t !== "None");
     selectedTag.value = tags.value.at(0);
   } catch (_) {
     return;

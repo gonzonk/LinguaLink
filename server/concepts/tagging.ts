@@ -56,6 +56,7 @@ export default class TaggingConcept {
 
   async getAllTags() {
     return [
+      "None",
       "Animals",
       "Art and Symbolism",
       "Body Parts",
