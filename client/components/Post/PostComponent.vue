@@ -46,7 +46,9 @@ onBeforeMount(async () => {
   <div v-if="props.post.imageUrl" class="image-container">
     <img :src="props.post.imageUrl" alt="Post image" class="post-image" />
   </div>
-  <p>{{ props.post.audioUrl }}</p>
+  <audio controls class="audio_element" crossorigin="anonymous">
+    <source :src="props.post.audioUrl" />
+  </audio>
 
   <div class="base">
     <menu v-if="props.post.author == currentUsername">
