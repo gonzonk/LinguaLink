@@ -34,13 +34,16 @@ const tagEntries = computed(() => {
     })
     .sort((a: { word: string }, b: { word: string }) => (a.word.toLowerCase() > b.word.toLowerCase() ? 1 : -1));
 
-  let uniqueEntries = [filteredPosts[0]];
+  let uniqueEntries: any[] = [];
 
-  // Since filtered posts array is sorted by word, posts for the same word will have consecutive indices
-  // The following for loop picks one post per word
-  for (let i = 1; i < filteredPosts.length; i++) {
-    if (filteredPosts[i].word !== filteredPosts[i - 1].word) {
-      uniqueEntries.push(filteredPosts[i]);
+  if (filteredPosts.length > 0) {
+    uniqueEntries = [filteredPosts[0]];
+    for (let i = 1; i < filteredPosts.length; i++) {
+      // Since filtered posts array is sorted by word, posts for the same word will have consecutive indices
+      // The following for loop picks one post per word
+      if (filteredPosts[i].word !== filteredPosts[i - 1].word) {
+        uniqueEntries.push(filteredPosts[i]);
+      }
     }
   }
 
