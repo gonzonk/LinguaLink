@@ -17,10 +17,12 @@ const selectedTag = ref();
 const searchQuery = ref("");
 const selectedTab = ref(0);
 const alphabeticalEntries = computed(() => {
-  return entries.value.filter((e) => {
-    const { word } = e;
-    return (word as string).toLowerCase().startsWith(selectedLetter.value.toLowerCase());
-  });
+  return entries.value
+    .filter((e) => {
+      const { word } = e;
+      return (word as string).toLowerCase().startsWith(selectedLetter.value.toLowerCase());
+    })
+    .sort((a: { word: string }, b: { word: string }) => (a.word.toLowerCase() > b.word.toLowerCase() ? 1 : -1));
 });
 
 const tagEntries = computed(() => {
@@ -29,7 +31,8 @@ const tagEntries = computed(() => {
     .filter((p) => {
       const { tags } = p;
       return (tags as string[]).find((t) => t === selectedTag.value) !== undefined;
-    });
+    })
+    .sort((a: { word: string }, b: { word: string }) => (a.word.toLowerCase() > b.word.toLowerCase() ? 1 : -1));
 });
 
 onBeforeMount(async () => {
