@@ -26,13 +26,25 @@ const alphabeticalEntries = computed(() => {
 });
 
 const tagEntries = computed(() => {
-  return posts.value
+  let filteredPosts = posts.value
     .map((p: { word: any; translation: any; tags: any }) => ({ word: p.word, translation: p.translation, tags: p.tags }))
     .filter((p) => {
       const { tags } = p;
       return (tags as string[]).find((t) => t === selectedTag.value) !== undefined;
     })
     .sort((a: { word: string }, b: { word: string }) => (a.word.toLowerCase() > b.word.toLowerCase() ? 1 : -1));
+
+  let uniqueEntries = [filteredPosts[0]];
+
+  // Since filtered posts array is sorted by word, posts for the same word will have consecutive indices
+  // The following for loop picks one post per word
+  for (let i = 1; i < filteredPosts.length; i++) {
+    if (filteredPosts[i].word !== filteredPosts[i - 1].word) {
+      uniqueEntries.push(filteredPosts[i]);
+    }
+  }
+
+  return uniqueEntries;
 });
 
 onBeforeMount(async () => {
