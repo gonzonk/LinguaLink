@@ -46,7 +46,7 @@ onBeforeMount(async () => {
   <div v-if="props.post.imageUrl" class="image-container">
     <img :src="props.post.imageUrl" alt="Post image" class="post-image" />
   </div>
-  <audio controls class="audio_element" crossorigin="anonymous">
+  <audio v-if="props.post.audioUrl !== undefined && props.post.audioUrl !== '' && props.post.audioUrl !== null" controls class="audio_element" crossorigin="anonymous">
     <source :src="props.post.audioUrl" />
   </audio>
 
