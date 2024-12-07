@@ -20,7 +20,11 @@ const deleteEvent = async () => {
 
 <template>
   <div class="event-container">
-    <p class="author">{{ props.event.author }}</p>
+    <div class="author-role-container">
+      <p class="author">{{ props.event.author }}</p>
+      <p class="role">Role: {{ currentRole }}</p>
+    </div>
+
     <p class="title">{{ props.event.title }}</p>
     <p class="description">{{ props.event.description }}</p>
 
@@ -88,12 +92,23 @@ const deleteEvent = async () => {
   margin-bottom: 20px;
 }
 
-/* Author Styling */
+.author-role-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px; /* Optional for spacing below */
+}
+
 .author {
   font-weight: bold;
   font-size: 1.2em;
   color: #d32f2f; /* Red for author name */
-  margin-bottom: 10px;
+}
+
+.role {
+  font-size: 1.1em;
+  text-align: right;
+  color: #d32f2f; /* Red for role */
 }
 
 /* Event Detail Styling */
