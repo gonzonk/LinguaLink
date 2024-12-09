@@ -71,6 +71,9 @@ function leftScroll() {
       </article>
       <button class="changeButton" v-on:click="rightScroll">{{ `>>>` }}</button>
     </div>
+    <div>
+      <p>Click the card to flip. {{ "<<<" }} takes you to the previous card. {{ ">>>" }} takes you to the next card.</p>
+    </div>
   </main>
 </template>
 
