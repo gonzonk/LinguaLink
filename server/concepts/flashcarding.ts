@@ -56,7 +56,7 @@ export default class FlashcardingConcept {
     await this.assertUserAuthor(name, user);
     const cards = await this.flashcards.readOne({ name: name });
     if (!cards) {
-      throw new NotFoundError("A set with that name does not exist");
+      throw new NotFoundError("A flashcard group with that name does not exist");
     }
     if (this.hasObject(cards.items, item)) {
       throw new Error("card already in set");
@@ -69,7 +69,7 @@ export default class FlashcardingConcept {
   async getFlashcards(id: ObjectId) {
     const cards = await this.flashcards.readOne({ id: id });
     if (!cards) {
-      throw new NotFoundError("A set with that id does not exist");
+      throw new NotFoundError("A flashcard group with that id does not exist");
     }
     return cards;
   }
@@ -77,7 +77,7 @@ export default class FlashcardingConcept {
   async getFlashcardsByName(name: string) {
     const cards = await this.flashcards.readOne({ name: name });
     if (!cards) {
-      throw new NotFoundError("A set with that name does not exist");
+      throw new NotFoundError("A flashcard group with that name does not exist");
     }
     return cards;
   }
@@ -86,7 +86,7 @@ export default class FlashcardingConcept {
     const cards = await this.flashcards.readMany({ author: author });
     console.log(cards);
     if (!cards) {
-      throw new NotFoundError("A set with that author does not exist");
+      throw new NotFoundError("A flashcard group with that author does not exist");
     }
     return cards;
   }
@@ -100,7 +100,7 @@ export default class FlashcardingConcept {
     await this.assertUserAuthor(name, user);
     const cards = await this.flashcards.readOne({ name: name });
     if (!cards) {
-      throw new NotFoundError("A set with that name does not exist");
+      throw new NotFoundError("A flashcard group with that name does not exist");
     }
     const newItems = cards.items.filter((p) => !p._id.equals(item._id));
     await this.flashcards.partialUpdateOne({ name: name }, { items: newItems });
@@ -130,7 +130,7 @@ export default class FlashcardingConcept {
   async assertNameUnused(name: string) {
     const cards = await this.flashcards.readOne({ name: name });
     if (cards) {
-      throw new NotAllowedError("A set with this name already exists");
+      throw new NotAllowedError("A flashcard group with this name already exists");
     }
   }
 }
