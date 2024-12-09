@@ -2,25 +2,12 @@
 import { useUserStore } from "@/stores/user";
 import { ref } from "vue";
 
-enum UserRole {
-  TEACHER = "Teacher",
-  LEARNER = "Learner",
-}
-
-enum Dialects {
-  WEST = "North Island Western",
-  EAST = "North Island Eastern",
-  SOUTH = "South Island",
-}
-
 let username = ref("");
 let currentPassword = ref("");
 let newPassword = ref("");
 let newDescription = ref("");
-let newRole = ref<UserRole>(UserRole.LEARNER);
-let newDialect = ref<Dialects>(Dialects.WEST);
 
-const { updateUserUsername, updateUserPassword, updateUserDescription, updateUserRole, updateUserDialect, updateSession } = useUserStore();
+const { updateUserUsername, updateUserPassword, updateUserDescription, updateSession } = useUserStore();
 
 async function updateUsername() {
   await updateUserUsername(username.value);
@@ -38,18 +25,6 @@ async function updateDescription() {
   await updateUserDescription(newDescription.value);
   await updateSession();
   newDescription.value = "";
-}
-
-async function updateRole() {
-  await updateUserRole(newRole.value);
-  await updateSession();
-  newRole.value = UserRole.LEARNER;
-}
-
-async function updateDialect() {
-  await updateUserDialect(newDialect.value);
-  await updateSession();
-  newDialect.value = Dialects.WEST;
 }
 </script>
 
@@ -77,31 +52,6 @@ async function updateDialect() {
       <legend>Change your description</legend>
       <input type="text" placeholder="New description" v-model="newDescription" required />
       <button type="submit" class="pure-button pure-button-primary">Update description</button>
-    </fieldset>
-  </form>
-
-  <form @submit.prevent="updateRole" class="pure-form">
-    <fieldset>
-      <legend>Change your role</legend>
-      <select v-model="newRole" required>
-        <option value="" disabled>Select a role</option>
-        <option :value="UserRole.TEACHER">Teacher</option>
-        <option :value="UserRole.LEARNER">Learner</option>
-      </select>
-      <button type="submit" class="pure-button pure-button-primary">Update role</button>
-    </fieldset>
-  </form>
-
-  <form @submit.prevent="updateDialect" class="pure-form">
-    <fieldset>
-      <legend>Change your dialect</legend>
-      <select v-model="newDialect" required>
-        <option value="" disabled>Select your dialect</option>
-        <option :value="Dialects.WEST">North Island Western</option>
-        <option :value="Dialects.EAST">North Island Eastern</option>
-        <option :value="Dialects.SOUTH">South Island</option>
-      </select>
-      <button type="submit" class="pure-button pure-button-primary">Update dialect</button>
     </fieldset>
   </form>
 </template>

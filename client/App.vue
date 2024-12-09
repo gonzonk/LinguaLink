@@ -45,18 +45,15 @@ const roleText = computed(() => {
         <li>
           <RouterLink :to="{ name: 'Home' }" :class="{ underline: currentRouteName == 'Home' }"> Home </RouterLink>
         </li>
-        <li v-if="isLoggedIn">
-          <RouterLink :to="{ name: 'Settings' }" :class="{ underline: currentRouteName == 'Settings' }"> Settings </RouterLink>
-        </li>
-        <li v-else>
+        <li v-if="!isLoggedIn">
           <RouterLink :to="{ name: 'Login' }" :class="{ underline: currentRouteName == 'Login' }"> Login </RouterLink>
         </li>
         <!-- Conditionally display the role-specific link -->
         <li>
           <span class="role-view">{{ roleText }}</span>
         </li>
-        <li>
-          <ProfilePicComponent :username="currentUsername" />
+        <li v-if="isLoggedIn">
+          <ProfilePicComponent :username="currentUsername" :size="'70px'" />
         </li>
       </ul>
     </nav>

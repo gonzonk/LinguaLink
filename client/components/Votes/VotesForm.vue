@@ -62,12 +62,20 @@ onBeforeMount(async () => {
 <template>
   <div class="vote-container">
     <!-- Upvote Button -->
-    <button @click="placeUpvote" :disabled="currentRole !== 'Teacher'" :class="{ upvoted: upvoted, neutral: !upvoted && !downvoted }">👍 {{ props.upvotes }}</button>
+    <button @click="placeUpvote" :disabled="currentRole !== 'Teacher'" :class="{ upvoted: upvoted, neutral: !upvoted && !downvoted }" aria-label="Upvote">
+      👍 {{ props.upvotes }}
+      <!-- Tooltip for Upvote -->
+      <span class="tooltip">Upvote to approve or support content.</span>
+    </button>
 
     <!-- Downvote Button -->
-    <button @click="placeDownvote" :disabled="currentRole !== 'Teacher'" :class="{ downvoted: downvoted, neutral: !upvoted && !downvoted }">👎 {{ props.downvotes }}</button>
+    <button @click="placeDownvote" :disabled="currentRole !== 'Teacher'" :class="{ downvoted: downvoted, neutral: !upvoted && !downvoted }" aria-label="Downvote">
+      👎 {{ props.downvotes }}
+      <!-- Tooltip for Downvote -->
+      <span class="tooltip">Downvote to disagree with or disapprove content.</span>
+    </button>
 
-    <p v-if="currentRole !== 'Teacher'" class="message">Only teachers can vote.</p>
+    <p v-if="currentRole !== 'Teacher'" class="message">Voting is reserved for teachers to indicate their approval or feedback on content.</p>
   </div>
 </template>
 
@@ -76,6 +84,7 @@ onBeforeMount(async () => {
   display: flex;
   align-items: center;
   gap: 1em;
+  position: relative;
 }
 
 /* General button styling */
@@ -90,6 +99,7 @@ button {
   padding: 0.5em 1em;
   border-radius: 5px;
   transition: all 0.3s ease;
+  position: relative;
 }
 
 /* Upvoted button (green) */
@@ -121,6 +131,37 @@ button:disabled {
   color: gray;
   background-color: #f8f8f8;
   border: 2px solid #ddd;
+}
+
+.tooltip {
+  visibility: hidden;
+  position: absolute;
+  background-color: #333;
+  color: white;
+  text-align: center;
+  border-radius: 5px;
+  padding: 3px 6px; /* Reduced padding */
+  font-size: 0.8em; /* Slightly smaller font size */
+  z-index: 10;
+  width: 120px; /* Reduced width */
+  left: 100%; /* Position the tooltip to the right of the button */
+  margin-left: 10px; /* Adds some space between the button and the tooltip */
+  top: 50%; /* Align the tooltip vertically with the center of the button */
+  transform: translateY(-50%); /* Center the tooltip vertically */
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+/* Show tooltip on hover */
+button:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Show tooltip on hover */
+button:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
 }
 
 /* Message styling */

@@ -3,12 +3,15 @@ import { useUserStore } from "@/stores/user";
 import { formatDate } from "@/utils/formatDate";
 import { storeToRefs } from "pinia";
 import { fetchy } from "../../utils/fetchy";
+import { onBeforeMount, ref } from "vue";
 import VotesBlock from "../Votes/VotesBlock.vue";
 import AddToGroupForm from "../Flashcarding/AddToFlashcardGroupForm.vue";
 
 const props = defineProps(["post"]);
 const emit = defineEmits(["editPost", "refreshPosts"]);
 const { currentUsername, currentRole } = storeToRefs(useUserStore());
+
+const postDialect = ref("");
 
 const deletePost = async () => {
   try {
@@ -18,17 +21,34 @@ const deletePost = async () => {
   }
   emit("refreshPosts");
 };
+
+const getDialect = async () => {
+  try {
+    const { dialect } = await fetchy(`/api/users/${props.post.author}`, "GET");
+    postDialect.value = dialect;
+  } catch (_) {
+    postDialect.value = "";
+  }
+};
+
+onBeforeMount(async () => {
+  await getDialect();
+});
 </script>
 
 <template>
   <p class="author">{{ props.post.author }}</p>
+  <p class="dialect">Dialect: {{ postDialect }}</p>
+  <p v-if="props.post.tags.length > 0 && props.post.tags.at(0) !== 'None'" class="tag">{{ `🏷️ ${props.post.tags.at(0)}` }}</p>
   <p class="word">{{ props.post.word }}</p>
   <p class="translation">{{ props.post.translation }}</p>
 
   <div v-if="props.post.imageUrl" class="image-container">
     <img :src="props.post.imageUrl" alt="Post image" class="post-image" />
   </div>
-  <p>{{ props.post.audioUrl }}</p>
+  <audio v-if="props.post.audioUrl" controls class="audio_element" crossorigin="anonymous">
+    <source :src="props.post.audioUrl" />
+  </audio>
 
   <div class="base">
     <menu v-if="props.post.author == currentUsername">
@@ -103,6 +123,10 @@ p {
 .author {
   font-weight: bold;
   font-size: 1.2em;
+}
+
+.tag {
+  font-size: 1em;
 }
 
 menu {

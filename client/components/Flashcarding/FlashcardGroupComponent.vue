@@ -68,7 +68,7 @@ function leftScroll() {
           </div>
         </div>
       </article>
-      <button class="changeButton" v-on:click="rightScroll"></button>
+      <button class="changeButton" v-on:click="rightScroll">{{ `>>>` }}</button>
     </div>
   </main>
 </template>

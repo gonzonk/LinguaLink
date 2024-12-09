@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { onBeforeMount, ref } from "vue";
 import { fetchy } from "../../utils/fetchy";
 import { formatDate } from "../../utils/formatDate";
 
@@ -9,13 +9,16 @@ const word = ref(props.post.word);
 const translation = ref(props.post.translation);
 const imageUrl = ref(props.post.imageUrl);
 const audioUrl = ref(props.post.audioUrl);
+const selectedTag = ref();
+
+const tags = ref();
 
 const emit = defineEmits(["editPost", "refreshPosts"]);
 
 const editPost = async () => {
   try {
     await fetchy(`/api/posts/${props.post._id}`, "PATCH", {
-      body: { word: word.value, translation: translation.value, imageUrl: imageUrl.value, audioUrl: audioUrl.value },
+      body: { word: word.value, translation: translation.value, imageUrl: imageUrl.value, audioUrl: audioUrl.value, tag: selectedTag.value },
     });
   } catch (e) {
     return;
@@ -23,6 +26,16 @@ const editPost = async () => {
   emit("editPost");
   emit("refreshPosts");
 };
+
+onBeforeMount(async () => {
+  try {
+    const tagResults = await fetchy("/api/tags", "GET");
+    tags.value = tagResults;
+    selectedTag.value = tags.value.at(0);
+  } catch (_) {
+    return;
+  }
+});
 </script>
 
 <template>
@@ -40,6 +53,10 @@ const editPost = async () => {
 
     <label for="audioUrl">audioUrl:</label>
     <input id="audioUrl" v-model="audioUrl" placeholder="audioUrl" />
+    <label for="audioUrl">Tag:</label>
+    <select v-model="selectedTag">
+      <option v-for="tag in tags" v-bind:key="tag">{{ tag }}</option>
+    </select>
     <div class="base">
       <menu>
         <li><button class="btn-small pure-button-primary pure-button" type="submit">Save</button></li>

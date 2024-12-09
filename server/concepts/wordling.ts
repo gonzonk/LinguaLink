@@ -1,9 +1,11 @@
-// import { ObjectId } from "mongodb";
 import DocCollection, { BaseDoc } from "../framework/doc";
-import { NotFoundError } from "./errors";
 
 export interface WordleDoc extends BaseDoc {
   word: string;
+}
+export interface CurrentDoc extends BaseDoc {
+  currDate: string;
+  currWord: string;
 }
 
 /**
@@ -12,8 +14,7 @@ export interface WordleDoc extends BaseDoc {
 export default class WordlingConcept {
   public readonly possible_words: DocCollection<WordleDoc>;
   public readonly previous_words: DocCollection<WordleDoc>;
-  private currWord: string;
-  private currDate: string;
+  public readonly current_status: DocCollection<CurrentDoc>;
 
   /**
    * Make an instance of Wordling.
@@ -21,8 +22,7 @@ export default class WordlingConcept {
   constructor(collectionName: string) {
     this.possible_words = new DocCollection<WordleDoc>(`${collectionName}-possible`);
     this.previous_words = new DocCollection<WordleDoc>(`${collectionName}-previous`);
-    this.currWord = "";
-    this.currDate = "";
+    this.current_status = new DocCollection<CurrentDoc>(`${collectionName}-current`);
   }
 
   async addWord(word: string) {
@@ -43,32 +43,14 @@ export default class WordlingConcept {
     return { msg: "Word removed successfully!" };
   }
 
-  async getCurrWord() {
-    if (this.currWord === "") {
-      throw new NotFoundError(`No current word has been set`);
-    }
-    return this.currWord;
-  }
-
-  async getCurrDate() {
-    if (this.currDate === "") {
-      throw new NotFoundError(`No current word has been set`);
-    }
-    return this.currDate;
-  }
-
-  async updateWord(word: string, newWord: string) {
-    await this.possible_words.partialUpdateOne({ word }, { word: newWord });
-    return { msg: "Word updated successfully!" };
-  }
-
   async handleNewDay(newDate: string) {
-    if (newDate !== this.currDate && newDate !== "") {
-      this.currDate = newDate;
+    const exists = await this.current_status.readOne({ currDate: newDate });
+    if (!exists) {
       const newWord = await this.pickWord();
-      this.currWord = newWord.word;
+      await this.current_status.createOne({ currWord: newWord.word, currDate: newDate });
     }
-    return this.currWord;
+    const word = await this.current_status.readOne({ currDate: newDate });
+    return word?.currWord;
   }
 
   private async pickWord() {

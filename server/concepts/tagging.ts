@@ -31,6 +31,20 @@ export default class TaggingConcept {
     }
   }
 
+  async setTag(tag: string, item: ObjectId) {
+    const record = await this.tags.readOne({ item });
+    if (record) {
+      // Add tag to existing record
+      await this.tags.partialUpdateOne({ item }, { tags: [tag] });
+    } else {
+      // Create entry and add item to it
+      await this.tags.createOne({
+        item,
+        tags: [tag],
+      });
+    }
+  }
+
   async getItemTags(item: ObjectId) {
     const record = await this.tags.readOne({ item });
     if (record) {
@@ -38,6 +52,34 @@ export default class TaggingConcept {
     } else {
       return [];
     }
+  }
+
+  async getAllTags() {
+    return [
+      "None",
+      "Animals",
+      "Art and Symbolism",
+      "Body Parts",
+      "Clothing and Textiles",
+      "Colors",
+      "Expressions of Emotion",
+      "Fishing and Hunting",
+      "Food and Cooking",
+      "Geographical Features",
+      "Greetings and Farewells",
+      "Household Items",
+      "Kinship",
+      "Modern Technology",
+      "Music and Dance",
+      "Mythology and Folklore",
+      "Numbers",
+      "Plants",
+      "Rituals and Ceremonies",
+      "Time",
+      "Traditional Crafts",
+      "Transportation",
+      "Weather",
+    ];
   }
 
   async getItemsByTag(tag: string) {
