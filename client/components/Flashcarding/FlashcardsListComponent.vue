@@ -48,7 +48,7 @@ onBeforeMount(async () => {
 
 <template>
   <div>
-    <h2>Groups:</h2>
+    <h2>Flashcard Groups:</h2>
   </div>
   <section class="flashcards" v-if="loaded && flashcards.length !== 0">
     <article v-for="group in flashcards" :key="group._id" v-on:click="() => onClick(group)">
