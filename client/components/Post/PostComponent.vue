@@ -4,7 +4,7 @@ import { formatDate } from "@/utils/formatDate";
 import { storeToRefs } from "pinia";
 import { fetchy } from "../../utils/fetchy";
 import VotesBlock from "../Votes/VotesBlock.vue";
-import AddToGroupForm from "../Flashcarding/AddToGroupForm.vue";
+import AddToGroupForm from "../Flashcarding/AddToFlashcardGroupForm.vue";
 
 const props = defineProps(["post"]);
 const emit = defineEmits(["editPost", "refreshPosts"]);

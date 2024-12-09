@@ -3,7 +3,7 @@ import { useRoute } from "vue-router";
 import { onBeforeMount } from "vue";
 import { fetchy } from "@/utils/fetchy";
 import { ref } from "vue";
-import GroupComponent from "@/components/Flashcarding/GroupComponent.vue";
+import GroupComponent from "@/components/Flashcarding/FlashcardGroupComponent.vue";
 const route = useRoute();
 const loaded = ref(false);
 const groupName = route.params.name;

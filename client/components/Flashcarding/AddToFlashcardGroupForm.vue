@@ -4,6 +4,7 @@ import { fetchy } from "../../utils/fetchy";
 
 const name = ref("");
 const loaded = ref(false);
+const show = ref(false);
 const props = defineProps(["parent"]);
 
 let flashcards = ref<Array<Record<string, string>>>([]);
@@ -61,7 +62,7 @@ onBeforeMount(async () => {
 
 onBeforeMount
 <template>
-  <form @submit.prevent="updateGroup">
+  <form @submit.prevent="updateGroup" v-if="show">
     <div class="authoredGroups">
       <h2>Your groups</h2>
       <section class="authoredFlashcards" v-if="loaded && flashcards.length !== 0">
@@ -81,6 +82,7 @@ onBeforeMount
     </div>
     <button type="submit" class="pure-button-primary pure-button">Add To Group</button>
   </form>
+  <button v-else v-on:click="() => (show = true)">Add To a Flashcard Group</button>
 </template>
 
 <style scoped>

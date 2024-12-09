@@ -369,6 +369,15 @@ class Routes {
     return { msg: "Flashcards created" };
   }
 
+  @Router.put("/flashcards")
+  async createEmptyFlashcards(session: SessionDoc, name: string, item: PostDoc) {
+    const user = Sessioning.getUser(session);
+    const userName = (await Profiling.getUserById(user)).username;
+    console.log("post item", item);
+    await Flashcarding.createEmptyFlashcards(user, userName, name);
+    return { msg: "Flashcards created" };
+  }
+
   @Router.patch("/flashcards/:name")
   async updateFlashcards(session: SessionDoc, name: string, item: PostDoc) {
     const user = Sessioning.getUser(session);

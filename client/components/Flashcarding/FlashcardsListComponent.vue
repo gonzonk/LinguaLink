@@ -9,6 +9,7 @@ import router from "@/router";
 const { isLoggedIn } = storeToRefs(useUserStore());
 
 const loaded = ref(false);
+const name = ref("");
 let flashcards = ref<Array<Record<string, string>>>([]);
 
 async function getFlashcards() {
@@ -20,6 +21,18 @@ async function getFlashcards() {
   }
   flashcards.value = flashcardGet.flashcards;
 }
+
+const createGroup = async () => {
+  try {
+    await fetchy("/api/flashcards", "PUT", {
+      body: {
+        name: name.value,
+      },
+    });
+  } catch (_) {
+    return;
+  }
+};
 
 const onClick = (group: Record<string, string>) => {
   console.log("group", group);
@@ -44,6 +57,14 @@ onBeforeMount(async () => {
   </section>
   <p v-else-if="loaded">No groups found</p>
   <p v-else>Loading...</p>
+  <div class="newGroup">
+    <h2>New Group:</h2>
+    <form @submit.prevent="createGroup">
+      <label for="title">Name:</label>
+      <input id="title" v-model="name" placeholder="enter name" required />
+      <button type="submit" class="pure-button-primary pure-button">Create Group</button>
+    </form>
+  </div>
 </template>
 
 <style scoped>

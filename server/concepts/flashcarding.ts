@@ -33,6 +33,12 @@ export default class FlashcardingConcept {
     this.flashcards = new DocCollection<FlashcardDoc>(name);
   }
 
+  async createEmptyFlashcards(author: ObjectId, authorName: string, name: string) {
+    await this.assertNameUnused(name);
+    const _id = await this.flashcards.createOne({ author, authorName, name });
+    return { msg: `Flashcard set ${name} created`, flashcards: await this.flashcards.readOne({ _id }) };
+  }
+
   async createFlashcards(author: ObjectId, authorName: string, name: string, item: BaseDoc) {
     await this.assertNameUnused(name);
     const _id = await this.flashcards.createOne({ author, authorName, name, items: [item] });
