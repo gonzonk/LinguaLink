@@ -374,18 +374,22 @@ class Routes {
   @Router.post("/flashcards")
   async createFlashcards(session: SessionDoc, name: string, item: PostDoc) {
     const user = Sessioning.getUser(session);
-    const userName = (await Profiling.getUserById(user)).username;
+    const userData = await Profiling.getUserById(user);
+    const userName = userData.username;
+    const userRole = userData.role;
     console.log("post item", item);
-    await Flashcarding.createFlashcards(user, userName, name, item);
+    await Flashcarding.createFlashcards(user, userName, name, userRole, item);
     return { msg: "Flashcards created" };
   }
 
   @Router.put("/flashcards")
   async createEmptyFlashcards(session: SessionDoc, name: string, item: PostDoc) {
     const user = Sessioning.getUser(session);
-    const userName = (await Profiling.getUserById(user)).username;
+    const userData = await Profiling.getUserById(user);
+    const userName = userData.username;
+    const userRole = userData.role;
     console.log("post item", item);
-    await Flashcarding.createEmptyFlashcards(user, userName, name);
+    await Flashcarding.createEmptyFlashcards(user, userName, name, userRole);
     return { msg: "Flashcards created" };
   }
 

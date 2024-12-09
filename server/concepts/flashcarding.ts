@@ -3,10 +3,13 @@ import { ObjectId } from "mongodb";
 import DocCollection, { BaseDoc } from "../framework/doc";
 import { NotAllowedError, NotFoundError } from "./errors";
 
+import { UserRole } from "./profiling";
+
 export interface FlashcardDoc extends BaseDoc {
   name: string;
   author: ObjectId;
   authorName: string;
+  authorRole: UserRole;
   items: BaseDoc[];
 }
 
@@ -33,15 +36,15 @@ export default class FlashcardingConcept {
     this.flashcards = new DocCollection<FlashcardDoc>(name);
   }
 
-  async createEmptyFlashcards(author: ObjectId, authorName: string, name: string) {
+  async createEmptyFlashcards(author: ObjectId, authorName: string, name: string, authorRole: UserRole) {
     await this.assertNameUnused(name);
-    const _id = await this.flashcards.createOne({ author, authorName, name });
+    const _id = await this.flashcards.createOne({ author, authorName, name, authorRole });
     return { msg: `Flashcard set ${name} created`, flashcards: await this.flashcards.readOne({ _id }) };
   }
 
-  async createFlashcards(author: ObjectId, authorName: string, name: string, item: BaseDoc) {
+  async createFlashcards(author: ObjectId, authorName: string, name: string, authorRole: UserRole, item: BaseDoc) {
     await this.assertNameUnused(name);
-    const _id = await this.flashcards.createOne({ author, authorName, name, items: [item] });
+    const _id = await this.flashcards.createOne({ author, authorName, name, authorRole, items: [item] });
     return { msg: `Flashcard set ${name} created`, flashcards: await this.flashcards.readOne({ _id }) };
   }
 

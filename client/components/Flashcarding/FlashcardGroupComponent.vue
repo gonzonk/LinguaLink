@@ -40,6 +40,7 @@ function leftScroll() {
     <div class="info">
       <h1>{{ props.group.name }}</h1>
       <h2>By: {{ props.group.authorName }}</h2>
+      <h2>Role: {{ props.group.authorRole }}</h2>
       <button class="delete" v-if="currentUsername == group.authorName" v-on:click="deleteGroup">Delete</button>
       <button class="flashcardButton" v-on:click="() => (flashcarding = !flashcarding)">Flashcard</button>
     </div>
