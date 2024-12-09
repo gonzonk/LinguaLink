@@ -42,7 +42,7 @@ function leftScroll() {
       <h2>By: {{ props.group.authorName }}</h2>
       <h2>Role: {{ props.group.authorRole }}</h2>
       <button class="delete" v-if="currentUsername == group.authorName" v-on:click="deleteGroup">Delete</button>
-      <button class="flashcardButton" v-on:click="() => (flashcarding = !flashcarding)">Flashcard</button>
+      <button class="flashcardButton" v-on:click="() => (flashcarding = !flashcarding)">Practice Flashcards</button>
     </div>
     <div class="posts">
       <article class="post" v-for="post in props.group.items" :key="post._id">
@@ -55,7 +55,7 @@ function leftScroll() {
     </div>
   </main>
   <main class="flashcarding" v-else>
-    <button class="flashcardButton" v-on:click="() => (flashcarding = !flashcarding)">Flashcard</button>
+    <button class="flashcardButton" v-on:click="() => (flashcarding = !flashcarding)">Flashcard Group: {{ props.group.name }}</button>
     <div class="cardControls">
       <button class="changeButton" v-on:click="leftScroll">{{ `<<<` }}</button>
       <article class="card" v-on:click="() => (flipped = !flipped)">
