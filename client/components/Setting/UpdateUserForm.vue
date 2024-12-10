@@ -49,7 +49,7 @@ async function updateDescription() {
 
   <form @submit.prevent="updateDescription" class="pure-form">
     <fieldset>
-      <legend>Change your description</legend>
+      <legend>Change your "About" description</legend>
       <input type="text" placeholder="New description" v-model="newDescription" required />
       <button type="submit" class="pure-button pure-button-primary">Update description</button>
     </fieldset>
