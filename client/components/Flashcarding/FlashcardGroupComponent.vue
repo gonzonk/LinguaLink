@@ -112,7 +112,7 @@ onBeforeMount(async () => {
         </div>
       </article>
     </div>
-    <button v-on:click="() => (addingPost = !addingPost)">Add A Post</button>
+    <button v-on:click="() => (addingPost = !addingPost)" v-if="currentUsername == group.authorName">Add A Post</button>
     <div v-if="addingPost" class="addPost">
       <div class="row">
         <h2 v-if="!searchWord">Posts:</h2>
