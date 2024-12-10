@@ -1,6 +1,5 @@
 <script setup lang="ts">
-// import { useUserStore } from "@/stores/user";
-// import { storeToRefs } from "pinia";
+import { useUserStore } from "@/stores/user";
 import { onBeforeMount, ref } from "vue";
 import { fetchy } from "../../utils/fetchy";
 import ProfilePicComponent from "./ProfilePicComponent.vue";
@@ -8,11 +7,20 @@ import router from "@/router";
 
 const props = defineProps(["username"]);
 const loaded = ref(false);
-// const { currentUsername } = storeToRefs(useUserStore());
 const profileName = ref("");
 const profileDescription = ref("");
+let newDescription = ref("");
 const profileRole = ref("");
 const profileDialect = ref("");
+
+const { updateUserDescription, updateSession } = useUserStore();
+
+async function updateDescription() {
+  await updateUserDescription(newDescription.value);
+  await updateSession();
+  newDescription.value = "";
+  await getInfo();
+}
 
 const getInfo = async () => {
   try {
@@ -53,6 +61,13 @@ onBeforeMount(async () => {
       <div class="about">
         <h3>About</h3>
         <p>{{ profileDescription }}</p>
+        <form @submit.prevent="updateDescription" class="pure-form">
+          <fieldset>
+            <legend>Update description</legend>
+            <input type="text" placeholder="New description" v-model="newDescription" required />
+            <button type="submit" class="pure-button pure-button-primary">Update description</button>
+          </fieldset>
+        </form>
       </div>
       <div>
         <img src="@/assets/images/gear.png" alt="Settings Button" class="settings-logo" @click="goToSettings" />
@@ -107,6 +122,9 @@ onBeforeMount(async () => {
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  height: 350px;
 }
 
 .about h3 {
@@ -116,7 +134,7 @@ onBeforeMount(async () => {
 
 .about p {
   font-size: 16px;
-  line-height: 1.6;
+  line-height: 1.5;
 }
 
 .settings-logo {
@@ -127,5 +145,9 @@ onBeforeMount(async () => {
 .settings-logo:hover {
   cursor: pointer;
   transform: scale(1.05); /* Slightly increase size on hover */
+}
+
+.pure-form {
+  margin-top: auto;
 }
 </style>

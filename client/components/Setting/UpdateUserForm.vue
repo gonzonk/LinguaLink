@@ -5,9 +5,8 @@ import { ref } from "vue";
 let username = ref("");
 let currentPassword = ref("");
 let newPassword = ref("");
-let newDescription = ref("");
 
-const { updateUserUsername, updateUserPassword, updateUserDescription, updateSession } = useUserStore();
+const { updateUserUsername, updateUserPassword, updateSession } = useUserStore();
 
 async function updateUsername() {
   await updateUserUsername(username.value);
@@ -19,12 +18,6 @@ async function updatePassword() {
   await updateUserPassword(currentPassword.value, newPassword.value);
   await updateSession();
   currentPassword.value = newPassword.value = "";
-}
-
-async function updateDescription() {
-  await updateUserDescription(newDescription.value);
-  await updateSession();
-  newDescription.value = "";
 }
 </script>
 
@@ -44,14 +37,6 @@ async function updateDescription() {
       <input type="password" placeholder="Old password" v-model="currentPassword" required />
       <input type="password" placeholder="New password" v-model="newPassword" required />
       <button type="submit" class="pure-button pure-button-primary">Update password</button>
-    </fieldset>
-  </form>
-
-  <form @submit.prevent="updateDescription" class="pure-form">
-    <fieldset>
-      <legend>Change your "About" description</legend>
-      <input type="text" placeholder="New description" v-model="newDescription" required />
-      <button type="submit" class="pure-button pure-button-primary">Update description</button>
     </fieldset>
   </form>
 </template>
