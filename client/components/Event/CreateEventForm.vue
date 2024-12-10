@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { fetchy } from "../../utils/fetchy";
+import { useRouter } from "vue-router";
 
 const title = ref("");
 const description = ref("");
 const time = ref("");
 const location = ref("");
+const router = useRouter(); // Access the Vue Router
 
 const emit = defineEmits(["refreshEvents"]);
 
@@ -19,6 +21,7 @@ const createEvent = async () => {
         location: location.value,
       },
     });
+    await router.push(`/events`); // Navigate to /posts/{word}
   } catch (_) {
     return;
   }
