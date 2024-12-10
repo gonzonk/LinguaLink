@@ -29,6 +29,8 @@ const createGroup = async () => {
         name: name.value,
       },
     });
+
+    await getFlashcards();
   } catch (_) {
     return;
   }
