@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onBeforeMount } from "vue";
 import { fetchy } from "../../utils/fetchy";
+import { useRouter } from "vue-router";
 
 const content = ref("");
 const word = ref("");
@@ -9,6 +10,7 @@ const imageUrl = ref("");
 const audioUrl = ref("");
 const tags = ref();
 const selectedTag = ref("");
+const router = useRouter(); // Access the Vue Router
 
 const emit = defineEmits(["refreshPosts"]);
 
@@ -24,6 +26,7 @@ const createPost = async () => {
         tag: selectedTag.value,
       },
     });
+    await router.push(`/posts/${word.value}`); // Navigate to /posts/{word}
   } catch (_) {
     return;
   }
