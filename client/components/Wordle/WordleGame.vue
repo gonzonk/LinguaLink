@@ -108,34 +108,58 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <div class="wordle">
-    <h1 class="word-of-the-day">Word of the Day</h1>
-    <div class="guess-grid">
-      <div v-for="(row, rowIndex) in guesses" :key="'row-' + rowIndex" class="guess-row">
-        <div v-for="(letter, index) in row" :key="'cell-' + index" class="guess-cell" :class="getCellClass(letter.status)">
-          {{ letter.value }}
+  <div class="wotd-page">
+    <div class="wordle">
+      <h1 class="word-of-the-day">Word of the Day</h1>
+      <div class="guess-grid">
+        <div v-for="(row, rowIndex) in guesses" :key="'row-' + rowIndex" class="guess-row">
+          <div v-for="(letter, index) in row" :key="'cell-' + index" class="guess-cell" :class="getCellClass(letter.status)">
+            {{ letter.value }}
+          </div>
         </div>
       </div>
-    </div>
 
-    <div v-if="gameOver" class="game-over">
-      <p class="game-over-text">{{ gameWon ? "You won!" : "Game Over! The word was " + correctWord + "." }}</p>
-      <button @click="goToEntry" class="learn-button">Learn more about this word!</button>
-    </div>
+      <div v-if="gameOver" class="game-over">
+        <p class="game-over-text">{{ gameWon ? "You won!" : "Game Over! The word was " + correctWord + "." }}</p>
+        <button @click="goToEntry" class="learn-button">Learn more about this word!</button>
+      </div>
 
-    <div v-else class="guess-input">
-      <input type="text" v-model="currentGuess" maxlength="6" @keyup.enter="submitGuess" :disabled="gameOver" placeholder="Enter guess" />
-      <button @click="submitGuess" :disabled="gameOver || !currentGuess" class="learn-button">Submit</button>
+      <div v-else class="guess-input">
+        <input type="text" v-model="currentGuess" maxlength="6" @keyup.enter="submitGuess" :disabled="gameOver" placeholder="Enter guess" />
+        <button @click="submitGuess" :disabled="gameOver || !currentGuess" class="submit-button">Submit</button>
+      </div>
+    </div>
+    <div class="instructions">
+      <h1 class="inst-title">How to Play</h1>
+      <div class="how-to">
+        <p>Guess the Maori Word of the Day in 6 tries.</p>
+        <ul>
+          <li>Each guess can be any 6-letter word.</li>
+          <li>The color of the tiles will change to show how close your guess was to the word.</li>
+          <ul>
+            <li>If the tile is GRAY, it means that that letter does not appear in the Word of the Day.</li>
+            <li>If the tile is YELLOW, the letter is in the Word of the Day, but it's in the wrong spot.</li>
+            <li>If the tile is GREEN, the letter is in the Word of the Day, and it's in the correct spot.</li>
+          </ul>
+          <li>After you finish the game, try clicking the "Learn more" button at the bottom of the page to learn what the Word of the Day means!</li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
+.wotd-page {
+  display: flex;
+  flex-direction: row;
+}
+
 .wordle {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-top: 20px;
+  width: 65%;
 }
 
 h1 {
@@ -208,11 +232,33 @@ button {
   text-align: center; /* Center the text inside the <p> */
 }
 
-.learn-button {
+.submit-button {
   background-color: #e6fffa; /* Light teal background */
   border: 2px solid #81e6d9; /* Teal border */
   color: #2c7a7b;
   font-size: 16px; /* Set text size */
+  padding: 10px 20px; /* Add padding for a larger button */
+  border-radius: 5px; /* Rounded corners */
+  cursor: pointer; /* Change cursor to pointer */
+  transition:
+    background-color 0.3s ease,
+    transform 0.2s ease; /* Smooth transition for hover effects */
+}
+
+.submit-button:hover {
+  background-color: #b2f5ea;
+  transform: scale(1.05); /* Slightly increase size on hover */
+}
+
+.submit-button:active {
+  background-color: #81e0d1;
+}
+
+.learn-button {
+  background-color: #e6fffa; /* Light teal background */
+  border: 2px solid #81e6d9; /* Teal border */
+  color: #2c7a7b;
+  font-size: 20px; /* Set text size */
   padding: 10px 20px; /* Add padding for a larger button */
   border-radius: 5px; /* Rounded corners */
   cursor: pointer; /* Change cursor to pointer */
@@ -237,10 +283,67 @@ button {
   padding: 5px;
 }
 
+.inst-title {
+  color: #2c7a7b;
+  font-size: 30px;
+  margin: 5px;
+  padding: 5px;
+}
+
 .game-over-text {
   font-size: 28px;
   color: #2c7a7b;
   margin: 7px;
   padding: 5px;
+}
+
+.instructions {
+  font-family: "Arial", sans-serif;
+  background-color: #f4f4f4;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  margin-top: 20px;
+  margin-right: 5px;
+  width: 35%;
+}
+
+.inst-title {
+  font-size: 2rem;
+  color: #2c3e50;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.how-to {
+  font-size: 1.05rem;
+  line-height: 1.3;
+  color: #34495e;
+}
+.how-to p {
+  margin-bottom: 15px;
+  font-style: italic;
+  color: #7f8c8d;
+}
+.how-to ul {
+  list-style-type: disc;
+  margin-left: 10px;
+  margin-bottom: 15px;
+}
+.how-to ul ul {
+  list-style-type: circle;
+  margin-left: 20px;
+  margin-bottom: 10px;
+}
+.how-to li {
+  margin-bottom: 10px;
+  font-weight: 400;
+}
+.how-to ul ul li {
+  font-weight: 300;
+  color: #2c7a7b;
 }
 </style>

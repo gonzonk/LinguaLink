@@ -91,8 +91,8 @@ onBeforeMount
         d="M15,3C8.373,3,3,8.373,3,15c0,6.627,5.373,12,12,12s12-5.373,12-12C27,8.373,21.627,3,15,3z M21,16h-5v5 c0,0.553-0.448,1-1,1s-1-0.447-1-1v-5H9c-0.552,0-1-0.447-1-1s0.448-1,1-1h5V9c0-0.553,0.448-1,1-1s1,0.447,1,1v5h5 c0.552,0,1,0.447,1,1S21.552,16,21,16z"
       ></path>
     </svg>
-    <!-- Tooltip text on hover -->
-    <span class="tooltip">Add to a Flashcard Group</span>
+    <!-- Always visible text -->
+    <span class="flashcard-text">Add to a Flashcard Group</span>
   </button>
 </template>
 
@@ -102,57 +102,31 @@ onBeforeMount
   background: none;
   border: none;
   cursor: pointer;
-  padding: 5px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  position: relative;
+  padding: 8px 12px;
+  gap: 10px; /* Space between icon and text */
   transition: transform 0.3s ease;
-  width: 45px; /* Set a fixed width for the icon */
-  height: 45px; /* Set a fixed height for the icon */
 }
 
 .flashcard-btn svg {
-  width: 100%;
-  height: 100%;
+  width: 35px; /* Size of the icon */
+  height: 35px;
   fill: #000000; /* Icon color */
-  transition: fill 0.3s ease;
 }
 
 .flashcard-btn:hover svg {
-  fill: #0056b3; /* Darker color on hover */
+  fill: #0056b3; /* Icon color on hover */
 }
 
-.flashcard-btn:hover .tooltip {
-  visibility: visible;
-  opacity: 1;
+/* Text styling */
+.flashcard-text {
+  font-size: 14px; /* Size of the text */
+  color: #333;
+  font-weight: normal;
 }
 
-/* Tooltip styling */
-.tooltip {
-  visibility: hidden;
-  position: absolute;
-  background-color: #333;
-  color: white;
-  text-align: center;
-  border-radius: 5px;
-  padding: 5px 10px;
-  font-size: 0.9em;
-  z-index: 10;
-  left: 100%;
-  margin-left: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-/* Hover Effect */
-.flashcard-btn:hover .tooltip {
-  visibility: visible;
-  opacity: 1;
-}
-
+/* Additional styles for the form and flashcards */
 form {
   background-color: rgb(255, 255, 255);
   border-radius: 1em;
