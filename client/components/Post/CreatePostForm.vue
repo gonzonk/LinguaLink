@@ -58,10 +58,10 @@ onBeforeMount(async () => {
       <label for="translation">Translation</label>
       <input id="translation" v-model="translation" required />
 
-      <label for="imageUrl">ImageUrl</label>
+      <label for="imageUrl">ImageUrl (Optional)</label>
       <input id="imageUrl" v-model="imageUrl" />
 
-      <label for="audioUrl">AudioUrl</label>
+      <label for="audioUrl">AudioUrl (Optional)</label>
       <input id="audioUrl" v-model="audioUrl" />
 
       <label for="audioUrl">Tag</label>
